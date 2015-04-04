@@ -84,7 +84,11 @@ public class App {
 		//Connection conn = DriverManager.getConnection(url, usr, pwd ); 
 		System.out.println("Connected... Now creating a statement");
 		}
-		catch(Exception ex){ex.printStackTrace();}
+		catch(Exception ex){
+			
+			System.out.println("Connection failed.");
+			ex.printStackTrace();
+			}
 		
 		String query = "SELECT * FROM Capteur_GPS";
 		Statement stmt = (Statement) conn.createStatement();
@@ -120,9 +124,6 @@ public class App {
 		Style style = SLD.createSimpleStyle(featureSource.getSchema());
 		Layer layer = new FeatureLayer(featureSource, style);
 		map.addLayer(layer);
-
-		JMapFrame.showMap(map);
-
 
 
 		final SimpleFeatureType TYPE = createFeatureType(); 
