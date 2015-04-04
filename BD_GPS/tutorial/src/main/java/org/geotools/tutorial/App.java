@@ -3,11 +3,16 @@ package org.geotools.tutorial;
 
 
 import java.awt.Color;
+import java.sql.Statement;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.sql.*;
+import java.net.*;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Properties;
 
 import javax.swing.UIManager;
 
@@ -65,6 +70,42 @@ public class App {
 	 * contents on the screen in a map frame
 	 */
 	public static void main(String[] args) throws Exception {
+		Connection conn = null;
+		try{
+		String url = "jdbc:oracle:thin:@delphes.iro.umontreal.ca:1521:a05";		
+		String usr = "rizzigia";
+		String pwd = "giap103R";
+		Class.forName("oracle.jdbc.driver.OracleDriver").newInstance();  
+
+		System.out.println("Connecting to Database URL = " + url);
+		conn =DriverManager.getConnection(url, usr, pwd);
+		
+		
+		//Connection conn = DriverManager.getConnection(url, usr, pwd ); 
+		System.out.println("Connected... Now creating a statement");
+		}
+		catch(Exception ex){ex.printStackTrace();}
+		
+		String query = "SELECT * FROM Capteur_GPS";
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		
+		while(rs.next()){
+			int captID = rs.getInt("CapteurID");
+			String model = rs.getString("modele");
+			String fabricant = rs.getString("fabricant");
+			String precisionGPS = rs.getString("precisionGPS");
+			Date dateDebut = rs.getDate("dateDebut");
+			Date dateFin = rs.getDate("dateFin");
+			
+			String result = captID + ", " + model + ", " + fabricant + ", " + precisionGPS +
+					", " + dateDebut.toString();
+			if(dateFin != null){
+				result += ", " + dateFin.toString();
+			}
+			System.out.println(result);
+		}
+		conn.close();
 		
 		File file = new File("Maps//ne_50m_admin_0_sovereignty.shp");
 		
