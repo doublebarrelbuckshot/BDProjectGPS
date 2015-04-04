@@ -51,7 +51,7 @@ CREATE TABLE Infos_Scientifique(capteurID INT, sampleDate TIMESTAMP, temperature
 CREATE TABLE Infos_Scientifique_Vivant(capteurID INT, sampleDate TIMESTAMP, pouls INT, pressionArterielle INT, pourcentageGras NUMBER(4,2), temperatureCorps INT);
 
 
-CREATE TABLE Particulier(particulierID INT PRIMARY KEY, nom VARCHAR(40), type VARCHAR(20), username VARCHAR(20), password VARCHAR(20));
+CREATE TABLE Particulier(particulierID INT PRIMARY KEY, nom VARCHAR(40), type VARCHAR(20), username VARCHAR(20), password VARCHAR(20), streetNumber varchar(10), streetName VARCHAR(50), city VARCHAR(30), provState VARCHAR(30), country VARCHAR(30), postalCodeZip VARCHAR(7), tel VARCHAR(20));
 
 
 CREATE TABLE Adopte(entiteID INT, particulierID INT, prix INT, debutLocation TIMESTAMP, finLocation TIMESTAMP, interet VARCHAR(40));
@@ -105,7 +105,11 @@ Insert into Capteur_GPS (capteurID, modele, fabricant, precisionGPS, dateDebut) 
 Insert into DB_GPS values (100, to_date('22/10/86/11/12/13',  'DD/MM/YYYY   HH24/MI/SS'), 12.345678, -179.765432);
 
 
-
-
-
-
+Insert into Particulier values (1, 'Universite de Montreal', 'Ecole', 'udemuser', 'udempass', '2900', 'Edouard Montpetit Blvd', 'Montreal', 'Quebec', 'Canada', 'H3T 1J4', '514-343-6111');
+Insert into Particulier values (2, 'McGill University', 'Ecole', 'mcgilluser', 'mcgillpass', '845', 'Sherbrooke West', 'Montreal', 'Quebec', 'Canada', 'H3A 0G4', '514-398-4455');
+Insert into Particulier values (3, 'Concordia University', 'Ecole', 'concordiauser', 'concordiapass', '7141', 'Sherbrooke West', 'Montreal', 'Quebec', 'Canada', 'H4B 1R6', '514-848-2424');
+Insert into Particulier values (4, 'UQAM', 'Ecole', 'uqamuser', 'uqampass', '405', 'Sainte Catherine East', 'Montreal', 'Quebec', 'Canada', 'H2L 2C4', '514-987-3000');
+Insert into Particulier values (5, 'Universite Sherbrooke', 'Ecole', 'sherbrookeuser', 'sherbrookepass', '2500', 'de lUniversite', 'Sherbrooke', 'Quebec', 'Canada', 'J1K 2R1', '819-821-7000');
+Insert into Particulier values (6, 'Department of Defence Canada', 'Gouvernement', 'dnduser', 'dndpass', '101', 'Colonel By Drive', 'Ottawa', 'Ontario', 'Canada', 'K1A 0K7', '613-992-4582');
+Insert into Particulier values (7, 'Google Inc', 'Enterprise', 'googleuser', 'googlepass', '1600', 'Amphitheatre Parkway', 'Mountain View', 'California', 'USA', '94043', '650-253-0000');
+Insert into Particulier values (8, 'Research In Motion Inc.', 'Enterprise', 'rimuser', 'rimpass', '2200', 'University East', 'Waterloo', 'Ontario', 'Canada', 'N2K 0A7', '519-888-7465');
