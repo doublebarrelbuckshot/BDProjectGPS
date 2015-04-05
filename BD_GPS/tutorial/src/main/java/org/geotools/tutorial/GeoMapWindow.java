@@ -7,6 +7,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import javax.swing.JFrame;
+
 import org.geotools.data.FileDataStore;
 import org.geotools.data.FileDataStoreFinder;
 import org.geotools.data.collection.ListFeatureCollection;
@@ -67,13 +69,27 @@ public class GeoMapWindow {
 
 		Layer layer2 = new FeatureLayer(collection, style2); 
 
-
 		map.addLayer(layer2); 
 
 		// It is safe to call this method from any thread (not just 
 		// the Event Dispatch Thread as is usual for Swing widgets) 
-		JMapFrame.showMap(map); 
+
 		
+		
+		//http://docs.geotools.org/stable/userguide/unsupported/swing/jmapframe.html
+		JMapFrame show = new JMapFrame(map);
+		show.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		show.setSize(1000, 600);
+		//show.enableLayerTable( true );
+
+		// zoom in, zoom out, pan, show all
+		show.enableToolBar( true );
+
+		// location of cursor and bounds of current
+		show.enableStatusBar( true );
+		show.setVisible(true);
+
+		//JMapFrame.showMap(map); 
 		
 	}
 	

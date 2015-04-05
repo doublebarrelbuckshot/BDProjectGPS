@@ -1,5 +1,3 @@
---FLORIN ONCICA
---GIANCARLO RIZZI
 SET PAGESIZE 50
 SET LINESIZE  260
 
@@ -41,7 +39,7 @@ CREATE TABLE EntiteMobile(entiteID INT PRIMARY KEY, nom VARCHAR(40), capteurID I
 
 CREATE TABLE Vivant(entiteID INT PRIMARY KEY, dateNaissance TIMESTAMP, dateDeces TIMESTAMP, espece VARCHAR(20));
 
-CREATE TABLE Artificiel(entiteID INT PRIMARY KEY, marque VARCHAR(20), anneFabrication INT, puissance VARCHAR(20), combustible VARCHAR(20));
+CREATE TABLE Artificiel(entiteID INT PRIMARY KEY,  marque VARCHAR(20), modele VARCHAR(20), anneeFabrication INT, puissance VARCHAR(20), combustible VARCHAR(20), typeMachine VARCHAR(20));
 
 CREATE TABLE DB_GPS(capteurID INT, sampleDate TIMESTAMP, latitude NUMBER(11, 9), longitude NUMBER(12,9), CHECK(latitude >= -90), CHECK( latitude <= 90),  CHECK(longitude >= -180), CHECK(longitude<=180));
 
@@ -82,7 +80,7 @@ ALTER TABLE Adopte ADD CONSTRAINT ENTID_PARTID_PK_AD PRIMARY KEY(entiteID, parti
 
 
 Insert into Capteur_GPS values (100, 'XYZ200', 'Garmin', '3', to_date('07/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
-Insert into Capteur_GPS values (101, 'Predator', 'Garmin', '5', to_date('07/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
+Insert into Capteur_GPS values (101, 'Predator', 'Garmin', '5', to_date('07/05/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
 Insert into Capteur_GPS values (102, 'Nuvi 55', 'Garmin', '3', to_date('07/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
 Insert into Capteur_GPS values (103, 'Gazelle', 'Garmin', '3', to_date('07/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
 Insert into Capteur_GPS values (104, 'SeaSnake', 'Garmin', '3', to_date('07/03/2012 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2015 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
@@ -113,3 +111,91 @@ Insert into Particulier values (5, 'Universite Sherbrooke', 'Ecole', 'sherbrooke
 Insert into Particulier values (6, 'Department of Defence Canada', 'Gouvernement', 'dnduser', 'dndpass', '101', 'Colonel By Drive', 'Ottawa', 'Ontario', 'Canada', 'K1A 0K7', '613-992-4582');
 Insert into Particulier values (7, 'Google Inc', 'Enterprise', 'googleuser', 'googlepass', '1600', 'Amphitheatre Parkway', 'Mountain View', 'California', 'USA', '94043', '650-253-0000');
 Insert into Particulier values (8, 'Research In Motion Inc.', 'Enterprise', 'rimuser', 'rimpass', '2200', 'University East', 'Waterloo', 'Ontario', 'Canada', 'N2K 0A7', '519-888-7465');
+
+
+Insert into EntiteMobile VALUES(1000,  '313WFL', 100);
+Insert into EntiteMobile VALUES(1001,  '724REX', 101);
+Insert into EntiteMobile VALUES(1002,  'Harry', 102);
+Insert into EntiteMobile VALUES(1003,  'Wally', 103);
+Insert into EntiteMobile VALUES(1004,  'Willy', 104);
+Insert into EntiteMobile VALUES(1005,  'Charles', 105);
+Insert into EntiteMobile VALUES(1006,  'BQM832', 106);
+Insert into EntiteMobile VALUES(1007,  'Marie', 107);
+Insert into EntiteMobile VALUES(1008,  'J2D883', 108);
+Insert into EntiteMobile VALUES(1009,  'Oscar', 109);
+Insert into EntiteMobile VALUES(1010,  'Groucho', 110);
+Insert into EntiteMobile VALUES(1011,  'Tigger', 111);
+Insert into EntiteMobile VALUES(1012,  '1107W', 112);
+Insert into EntiteMobile VALUES(1013,  '4302NS', 113);
+Insert into EntiteMobile VALUES(1014,  '5086CAN', 114);
+Insert into EntiteMobile VALUES(1015,  '5087CAN', 115);
+Insert into EntiteMobile VALUES(1016,  '5088CAN', 116);
+Insert into EntiteMobile VALUES(1017,  'STUCAZO', 117);
+Insert into EntiteMobile VALUES(1018,  'SLICE OF LIFE', 118);
+
+
+
+INSERT INTO Artificiel VALUES('1000', 'Toyota', 'Yaris', '2007', '1.5L', 'Essence', 'Automobile');
+INSERT INTO Artificiel VALUES('1001', 'Honda', 'Civic', '2008', '1.7L', 'Essence', 'Automobile');
+INSERT INTO Artificiel VALUES('1006', 'Mack', 'SE11', '2008', '4.7L', 'Diesel', 'Camion');
+INSERT INTO Artificiel VALUES('1008', 'Toyota', 'Prius', '2007', '1.5L', 'Hybrid', 'Automobile');
+INSERT INTO Artificiel VALUES('1012', 'Boeing', '777-200ER', '2001', '1020kN', 'Jet Fuel', 'Avion');
+INSERT INTO Artificiel VALUES('1013', 'Airbus', 'A380', '2007', '800kN', 'Essence', 'Avion');
+INSERT INTO Artificiel VALUES('1017', 'Princess Yachts', 'Flybridge 98', '2008', '4450mhp', 'Essence', 'Bateau');
+INSERT INTO Artificiel VALUES('1018', 'Princess Yachts', 'S72', '2004', '3600mhp', 'Essence', 'Bateau');
+
+
+
+INSERT INTO Vivant VALUES(1002, to_date('09/03/2000', 'DD/MM/YYYY'), to_date('09/03/2015', 'DD/MM/YYYY'), 'Falcon' );
+INSERT INTO Vivant VALUES(1003, to_date('11/03/2002', 'DD/MM/YYYY'), to_date('20/04/2015', 'DD/MM/YYYY'), 'Cheetah' );
+INSERT INTO Vivant VALUES(1004, to_date('22/07/2001', 'DD/MM/YYYY'), to_date('02/02/2014', 'DD/MM/YYYY'), 'Shark' );
+INSERT INTO Vivant (entiteID, dateNaissance, espece) VALUES(1005, to_date('15/05/2001', 'DD/MM/YYYY'), 'Coyote' );
+INSERT INTO Vivant (entiteID, dateNaissance, espece) VALUES(1007, to_date('27/02/1986', 'DD/MM/YYYY'),  'Human' );
+INSERT INTO Vivant (entiteID, dateNaissance, espece)  VALUES(1009, to_date('25/11/2003', 'DD/MM/YYYY'), 'Turtle' );
+INSERT INTO Vivant (entiteID, dateNaissance, espece)  VALUES(1010, to_date('30/04/2005', 'DD/MM/YYYY'), 'Hyena' );
+INSERT INTO Vivant VALUES(1011, to_date('05/05/2004', 'DD/MM/YYYY'), to_date('04/04/2015', 'DD/MM/YYYY'), 'Lion' );
+
+
+
+
+
+Insert into Adopte values (1000, 1, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Scientifique');
+
+Insert into Adopte values (1001, 1, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Scientifique');
+
+Insert into Adopte values (1002, 2, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Scientifique');
+
+Insert into Adopte values (1003, 3, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Ludique');
+
+Insert into Adopte values (1004, 4, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Scientifique');
+
+Insert into Adopte values (1005, 5, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Ludique');
+
+Insert into Adopte values (1006, 6, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Scientifique');
+
+Insert into Adopte values (1007, 7, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Scientifique');
+
+Insert into Adopte values (1008, 8, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Ludique');
+
+Insert into Adopte values (1009, 1, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Ludique');
+
+Insert into Adopte values (1010, 2, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Ludique');
+
+Insert into Adopte values (1011, 2, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Scientifique');
+
+Insert into Adopte values (1012, 4, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Ludique');
+
+Insert into Adopte values (1013, 3, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Scientifique');
+
+Insert into Adopte values (1014, 5, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Ludique');
+
+Insert into Adopte values (1015, 6, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Scientifique');
+
+Insert into Adopte values (1016, 7, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Ludique');
+
+Insert into Adopte values (1017, 8, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Scientifique');
+
+Insert into Adopte values (1018, 6, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Ludique');
+
+
+

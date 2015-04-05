@@ -44,9 +44,6 @@ public class Particulier {
 	}
 	
 	
-
-	
-	
 	public String toString(){
 		String result = "";
 		result += this.particulierID + ", " + this.nom + ", " + this.type + ", " + this.username + ", " + 
@@ -54,6 +51,12 @@ public class Particulier {
 				this.provState + ", " + this.country + ", " + this.postalCodeZip + ", " + this.tel;
 		return result;
 	}
+	
+	public String printListString(){
+		return this.particulierID + ": " + this.nom;
+	}
+	
+	
 	public int getParticulierID() {
 		return particulierID;
 	}
