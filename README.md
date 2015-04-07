@@ -6,7 +6,8 @@ REMAINING TASKS:
 
   - Login screen
     - Login sur oracle, determine la vue
-    
+    - Bring connection code to login screen code, rather than GUI code    
+
   - Particulier view
     - No New
     - No Edit
@@ -30,7 +31,7 @@ REMAINING TASKS:
   - Finalise Trajets
     - Creer des trajets (Coherents) pour les GPS device
 
-    
+  
     
   - Diapositive pour la presentation
   
