@@ -32,7 +32,7 @@ REMAINING TASKS:
     - Creer des trajets (Coherents) pour les GPS device
 
   
-    
+  - Mettre login alternatif pour le login de Oracle.
   - Diapositive pour la presentation
   
     
