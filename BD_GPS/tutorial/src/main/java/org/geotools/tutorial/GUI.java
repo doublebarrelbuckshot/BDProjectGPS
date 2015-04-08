@@ -61,7 +61,7 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 	}
 
 
-	public GUI(String s) throws Exception{
+	public GUI(String s, String viewType) throws Exception{
 		super(s);
 
 
@@ -180,6 +180,9 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 		btnEMDetails.addActionListener(this);
 		btnEMDetails.setActionCommand("btnEMDetails");
 
+		//Only init these buttons if the user is admin
+		if(viewType == "admin"){
+		
 		/*
 		 * Initialize Edit button
 		 */
@@ -195,6 +198,8 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 		panEMButtons.add(btnEMNew);
 		btnEMNew.addActionListener(this);
 		btnEMNew.setActionCommand("btnEMNew");
+
+		}
 
 
 		/*
@@ -216,7 +221,11 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 		JPanel listsPanel = new JPanel();
 		listsPanel.setLayout(new GridLayout(1,3));
 
-		listsPanel.add(particuliersPanel);
+		//Only init this panel if admin
+		if(viewType == "admin"){
+			listsPanel.add(particuliersPanel);	
+		}
+		
 		listsPanel.add(entiteMobilesPanel);
 		listsPanel.add(new JPanel());
 
