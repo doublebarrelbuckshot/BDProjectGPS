@@ -24,7 +24,7 @@ import javax.swing.event.ListSelectionListener;
 
 
 
-///test Florin
+///test Florin 16:07
 public class GUI extends JFrame implements ListSelectionListener, ActionListener{
 
 	private static Connection conn;
