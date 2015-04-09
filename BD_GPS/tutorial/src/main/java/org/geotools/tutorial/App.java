@@ -64,12 +64,13 @@ public class App {
 
 	public static final String ADMIN = "admin";
 	public static final String USER = "user";
+	
+	
 	public static void main(String[] args) throws Exception {
 		
-		
 		//CHOOSE GUI TYPE BY LOGIN PARAMETERS ADMIN OR USER
-		GUI gui = new GUI("GPS Tracker", ADMIN);
+		GUI gui;
+		gui = new GUI("GPS Tracker", ADMIN);
 
 	}
-
 }
