@@ -9,9 +9,9 @@ REMAINING TASKS:
     - Bring connection code to login screen code, rather than GUI code    
 
   - Particulier view
-    - No New
-    - No Edit
-    - No particulars list
+    - No New                  Done
+    - No Edit                 Done
+    - No particulars list     Done
     
   - Administrator view
     - New particulier
