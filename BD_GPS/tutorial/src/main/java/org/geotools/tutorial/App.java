@@ -62,10 +62,15 @@ import com.vividsolutions.jts.io.ParseException;
 
 public class App {
 
+	public static final String ADMIN = "admin";
+	public static final String USER = "user";
+	
+	
 	public static void main(String[] args) throws Exception {
 		
-		GUI gui = new GUI("GPS Tracker");
+		//CHOOSE GUI TYPE BY LOGIN PARAMETERS ADMIN OR USER
+		GUI gui;
+		gui = new GUI("GPS Tracker", ADMIN);
 
 	}
-
 }

@@ -24,12 +24,13 @@ import javax.swing.event.ListSelectionListener;
 
 
 
-
+///test Florin 16:07
 public class GUI extends JFrame implements ListSelectionListener, ActionListener{
 
 	private static Connection conn;
 	private int capteurIWantToMap = 101;
 	private Boolean programChanged = false;
+	private static String viewType;
 
 
 
@@ -61,9 +62,10 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 	}
 
 
-	public GUI(String s) throws Exception{
+	public GUI(String s, String viewType) throws Exception{
 		super(s);
-
+		
+		GUI.viewType = viewType;
 
 		/*
 		 * ************************************************************
@@ -180,28 +182,69 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 		btnEMDetails.addActionListener(this);
 		btnEMDetails.setActionCommand("btnEMDetails");
 
+		//Only init these buttons if the user is admin
+		if(viewType == "admin"){
+			
+			/*
+			 * Initialize Edit button
+			 */
+			JButton btnEMEdit = new JButton("Edit");
+			panEMButtons.add(btnEMEdit);
+			btnEMEdit.addActionListener(this);
+			btnEMEdit.setActionCommand("btnEMEdit");
+	
+			/*
+			 * Initialize NEW button
+			 */
+			JButton btnEMNew = new JButton("New");
+			panEMButtons.add(btnEMNew);
+			btnEMNew.addActionListener(this);
+			btnEMNew.setActionCommand("btnEMNew");
+
+		}
+		
+		entiteMobilesPanel.add(panEMButtons, BorderLayout.SOUTH);
+		
+		/*
+		 * ************************************************************
+		 ******************* PARTICULIER BUTTONS  *******************
+		 * ************************************************************
+		 */
+		/*Only admin sees these buttons. They are added to a panel that is shown only if in admin view*/
+		JPanel panPAButtons = new JPanel();
+		panPAButtons.setLayout(new GridLayout(4,1));
+
+
+		/*
+		 * Initialize details button
+		 */
+		JButton btnPADetails = new JButton("Details");
+		panPAButtons.add(btnPADetails);
+		btnPADetails.addActionListener(this);
+		btnPADetails.setActionCommand("btnPADetails");
+
+
 		/*
 		 * Initialize Edit button
 		 */
-		JButton btnEMEdit = new JButton("Edit");
-		panEMButtons.add(btnEMEdit);
-		btnEMEdit.addActionListener(this);
-		btnEMEdit.setActionCommand("btnEMEdit");
+		JButton btnPAEdit = new JButton("Edit");
+		panPAButtons.add(btnPAEdit);
+		btnPAEdit.addActionListener(this);
+		btnPAEdit.setActionCommand("btnPAEdit");
 
 		/*
 		 * Initialize NEW button
 		 */
-		JButton btnEMNew = new JButton("New");
-		panEMButtons.add(btnEMNew);
-		btnEMNew.addActionListener(this);
-		btnEMNew.setActionCommand("btnEMNew");
-
+		JButton btnPANew = new JButton("New");
+		panPAButtons.add(btnPANew);
+		btnPANew.addActionListener(this);
+		btnPANew.setActionCommand("btnPANew");
 
 		/*
 		 * ADD ALL BUTTONS TO ENTITE MOBILE PANEL
 		 */
 
-		entiteMobilesPanel.add(panEMButtons, BorderLayout.SOUTH);
+		particuliersPanel.add(panPAButtons, BorderLayout.SOUTH);
 
 
 
@@ -216,7 +259,11 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 		JPanel listsPanel = new JPanel();
 		listsPanel.setLayout(new GridLayout(1,3));
 
-		listsPanel.add(particuliersPanel);
+		//Only init this panel if admin
+		if(viewType == "admin"){
+			listsPanel.add(particuliersPanel);	
+		}
+		
 		listsPanel.add(entiteMobilesPanel);
 		listsPanel.add(new JPanel());
 
@@ -228,10 +275,31 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 		 *******************  MAIN WINDOW SETTINGS  *******************
 		 * ************************************************************
 		 */
-		setSize(1000,750);
+
+		
+		//IF IT IS A USER VIEW, THEN POPULATE THE ENTITE LIST WITH THAT USERS' ENTITIES
+		//ONCE LOGIN IS ESTABLISHED, CHANGE THIS CODE TO REFLECT USER LOGIN.
+		if(GUI.viewType == "user"){
+			
+			try {
+				entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, 1);
+				updateEntiteMobileList();
+			} 
+			catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			
+			this.setSize(700,750);	
+			
+			
+		} else if (GUI.viewType == "admin"){
+			
+			this.setSize(1000,750);	
+		}
+		
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
 
 
 	}
@@ -264,7 +332,7 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 				e.printStackTrace();
 			}
 		}
-
+		//IF CLICK ENTITEMOBILE-DETAILS
 		else if(action.equals("btnEMDetails")){
 			int selectedEMIndex = listEntiteMobiles.getSelectedIndex();
 			EntiteMobile selectedEM = null;  
@@ -292,7 +360,7 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 			}
 		}
 		
-		
+		//IF CLICK ENTITEMOBILE-EDIT
 		else if(action.equals("btnEMEdit")){
 			int selectedEMIndex = listEntiteMobiles.getSelectedIndex();
 			EntiteMobile selectedEM = null;  
@@ -325,6 +393,16 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 			EMNewGUI newEM = new EMNewGUI("ADD NEW GUI", conn);
 		}
 		
+		else if(action.equals("btnPADetails")){
+			JOptionPane.showMessageDialog(this, "This button (Details) doesn't do anything yet");
+		}
+		else if(action.equals("btnPAEdit")){
+			JOptionPane.showMessageDialog(this, "This button (Edit) doesn't do anything yet");
+		}
+		else if(action.equals("btnPANew")){
+			JOptionPane.showMessageDialog(this, "This button (New) doesn't do anything yet");
+		}
+		
 	}
 
 
@@ -340,53 +418,75 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 
 	public void valueChanged(ListSelectionEvent e) {
 		if(!e.getValueIsAdjusting()){
-			if (e.getSource().equals(listParticuliers)) {
-				if(listParticuliers.getSelectedIndex() != -1){
 
-					programChanged = true;
-					int particulierID = Particulier.listParticulier.get(listParticuliers.getSelectedIndex()).getParticulierID();
+			
+			if (e.getSource().equals(listParticuliers)) {
+				
+				if(GUI.viewType == "user"){
+					
+					// GET USER NAME, AND SET THE SELECTED PARTICULIER TO THAT USER.
+					// THERE IS CURRENTLY NO LOGIN FRAME, SO THIS IF WILL ASSUME UNIVERSITE DE MONTREAL
+					//
+					
 					try {
-						entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, particulierID);
+						entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, 1);
 						updateEntiteMobileList();
 					} 
 					catch (Exception e1) {
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					programChanged = false;
+					
+				} else if (GUI.viewType == "admin") {
+					
+					if(listParticuliers.getSelectedIndex() != -1){
+
+						programChanged = true;
+						int particulierID = Particulier.listParticulier.get(listParticuliers.getSelectedIndex()).getParticulierID();
+						try {
+							entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, particulierID);
+							updateEntiteMobileList();
+						} 
+						catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						programChanged = false;
 
 
 
-					//						programChanged = true;
-					//
-					//						String test = listClasses.getSelectedValue();
-					//						Classe newlyClickedClass = Model.getClassFromName(test);
-					//						this.generalization = newlyClickedClass.getListGeneralization();
-					//						this.attribute = newlyClickedClass.getListAttribute();
-					//						this.operation = newlyClickedClass.getListOperation();
-					//						this.relation = new ArrayList<>();
-					//
-					//						for(int i = 0; i<newlyClickedClass.getListAggregation().size(); i++){
-					//							this.relation.add((Relation)newlyClickedClass.getListAggregation().get(i));
-					//						}
-					//
-					//						for(int i = 0; i<newlyClickedClass.getListAssociation().size(); i++){
-					//							this.relation.add((Relation)newlyClickedClass.getListAssociation().get(i));
-					//						}
-					//
-					//						updateGeneralizationList();
-					//						updateAttributeList();
-					//						updateOperationList();
-					//						updateRelationList();
-					//
-					//						listGeneralizations.clearSelection();
-					//						listAttributes.clearSelection();
-					//						listOperations.clearSelection();
-					//						listRelations.clearSelection();
-					//						descriptionTextArea.setText("");
-					//
-					//						programChanged = false;
+						//						programChanged = true;
+						//
+						//						String test = listClasses.getSelectedValue();
+						//						Classe newlyClickedClass = Model.getClassFromName(test);
+						//						this.generalization = newlyClickedClass.getListGeneralization();
+						//						this.attribute = newlyClickedClass.getListAttribute();
+						//						this.operation = newlyClickedClass.getListOperation();
+						//						this.relation = new ArrayList<>();
+						//
+						//						for(int i = 0; i<newlyClickedClass.getListAggregation().size(); i++){
+						//							this.relation.add((Relation)newlyClickedClass.getListAggregation().get(i));
+						//						}
+						//
+						//						for(int i = 0; i<newlyClickedClass.getListAssociation().size(); i++){
+						//							this.relation.add((Relation)newlyClickedClass.getListAssociation().get(i));
+						//						}
+						//
+						//						updateGeneralizationList();
+						//						updateAttributeList();
+						//						updateOperationList();
+						//						updateRelationList();
+						//
+						//						listGeneralizations.clearSelection();
+						//						listAttributes.clearSelection();
+						//						listOperations.clearSelection();
+						//						listRelations.clearSelection();
+						//						descriptionTextArea.setText("");
+						//
+						//						programChanged = false;
+					}
 				}
+
 			}
 		}
 	}
