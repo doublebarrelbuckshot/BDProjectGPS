@@ -320,6 +320,10 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 				}
 			}
 		}
+		else if(action.equals("btnEMNew")){
+		
+			EMNewGUI newEM = new EMNewGUI("ADD NEW GUI", conn);
+		}
 		
 	}
 

@@ -12,6 +12,18 @@ import javax.swing.JTextField;
 
 public class PresetQueries {
 
+	public static int getMaxEMID(Connection conn) throws SQLException{
+		String query = "SELECT MAX(entiteID) from EntiteMobile";
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+			int result = 0;
+		while(rs.next()){
+			result = rs.getInt("MAX(ENTITEID)");
+
+		}
+		System.out.println("RESULT IS: " + result);
+		return result;
+	}
 
 	public static void updateArtificiel(Connection conn, int entiteID,
 			String marque, String modele, int anneeFabrication, String puissance,
