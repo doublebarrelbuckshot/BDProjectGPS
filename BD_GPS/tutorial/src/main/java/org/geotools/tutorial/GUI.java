@@ -354,13 +354,20 @@ public void  refreshGUIFromCGPS(){
 		JPanel listsPanel = new JPanel();
 		listsPanel.setLayout(new GridLayout(1,3));
 
-		//Only init this panel if admin
+		//Only init this particuliers panel if admin
 		if(viewType == "admin"){
-			listsPanel.add(particuliersPanel);	
+			listsPanel.add(particuliersPanel);
+
+		}
+		listsPanel.add(entiteMobilesPanel);
+		
+		//Only init this capteursPanel if admin
+		if(viewType == "admin"){
+			listsPanel.add(capteursPanel);
 		}
 
-		listsPanel.add(entiteMobilesPanel);
-		listsPanel.add(capteursPanel);
+
+		
 
 		add(listsPanel, BorderLayout.CENTER);
 
@@ -385,7 +392,7 @@ public void  refreshGUIFromCGPS(){
 				e1.printStackTrace();
 			}
 
-			this.setSize(700,750);	
+			this.setSize(375,750);	
 
 
 		} else if (GUI.viewType == "admin"){
