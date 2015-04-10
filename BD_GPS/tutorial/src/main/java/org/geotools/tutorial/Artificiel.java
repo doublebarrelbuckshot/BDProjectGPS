@@ -25,6 +25,12 @@ public class Artificiel extends EntiteMobile {
 	
 
 
+	public Artificiel() {
+		// TODO Auto-generated constructor stub
+	}
+
+
+
 	public String toString(){
 		String result = "";
 		result += super.toString() + ", " + this.marque + ", " + this.modele + ", " + this.anneeFabrication + ", " + 

@@ -1,3 +1,5 @@
+--FLORIN ONCICA
+--GIANCARLO RIZZI
 SET PAGESIZE 50
 SET LINESIZE  260
 
@@ -88,16 +90,16 @@ Insert into Capteur_GPS values (105, 'Go600', 'TomTom', '3', to_date('07/03/2012
 Insert into Capteur_GPS values (106, 'Cycle', 'Garmin', '9', to_date('07/03/2012 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
 Insert into Capteur_GPS values (107, 'Tornado', 'Garmin', '3', to_date('07/03/2012 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
 Insert into Capteur_GPS values (108, 'Hurricane', 'Garmin', '3', to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
-Insert into Capteur_GPS (capteurID, modele, fabricant, precisionGPS, dateDebut) values (109, 'VIA 1535TM', 'TomTom', '3', to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
+Insert into Capteur_GPS values (109, 'VIA 1535TM', 'TomTom', '3', to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
 Insert into Capteur_GPS values (110, 'VIA 1605TM', 'TomTom', '3', to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
 Insert into Capteur_GPS values (111, 'Nuvi 3597LMTHD', 'Garmin', '14', to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
 Insert into Capteur_GPS values (112, 'Wallet U14', 'TrackR', '11', to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2015 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
 Insert into Capteur_GPS values (113, 'Lola', 'Laipac', '4', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2015 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
-Insert into Capteur_GPS (capteurID, modele, fabricant, precisionGPS, dateDebut) values (114, 'Sticker', 'TrackR', '6', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
-Insert into Capteur_GPS (capteurID, modele, fabricant, precisionGPS, dateDebut) values (115, 'Entourae PS', 'Escort', '4', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
-Insert into Capteur_GPS (capteurID, modele, fabricant, precisionGPS, dateDebut) values (116, 'Bracelet HC-ST', 'Laipac', '11', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
-Insert into Capteur_GPS (capteurID, modele, fabricant, precisionGPS, dateDebut) values  (117, 'Entourage CIS', 'Escort', '4', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
-Insert into Capteur_GPS (capteurID, modele, fabricant, precisionGPS, dateDebut) values (118, 'StarFinder', 'Laipac', '1', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
+Insert into Capteur_GPS values (114, 'Sticker', 'TrackR', '6', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
+Insert into Capteur_GPS values (115, 'Entourae PS', 'Escort', '4', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
+Insert into Capteur_GPS values (116, 'Bracelet HC-ST', 'Laipac', '11', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
+Insert into Capteur_GPS values  (117, 'Entourage CIS', 'Escort', '4', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS') ,to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
+Insert into Capteur_GPS values (118, 'StarFinder', 'Laipac', '1', to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), to_date('07/03/2014 02/07/09', 'DD/MM/YYYY HH24/MI/SS'));
 
 
 Insert into DB_GPS values (100, to_date('22/10/86/11/12/13',  'DD/MM/YYYY   HH24/MI/SS'), 12.345678, -179.765432);
@@ -134,6 +136,8 @@ Insert into EntiteMobile VALUES(1017,  'STUCAZO', 117);
 Insert into EntiteMobile VALUES(1018,  'SLICE OF LIFE', 118);
 
 
+
+--CREATE TABLE Artificiel(entiteID INT PRIMARY KEY, marque VARCHAR(20), anneeFabrication INT, puissance VARCHAR(20), combustible VARCHAR(20));
 
 INSERT INTO Artificiel VALUES('1000', 'Toyota', 'Yaris', '2007', '1.5L', 'Essence', 'Automobile');
 INSERT INTO Artificiel VALUES('1001', 'Honda', 'Civic', '2008', '1.7L', 'Essence', 'Automobile');
@@ -197,5 +201,11 @@ Insert into Adopte values (1017, 8, 300, to_date('09/03/2011 02/07/09', 'DD/MM/Y
 
 Insert into Adopte values (1018, 6, 300, to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), 'Ludique');
 
+
+
+--SELECT EntiteMobile.entiteID, EntiteMobile.nom, EntiteMobile.capteurID FROM 
+--				Particulier, EntiteMobile, Adopte 
+--				WHERE Particulier.particulierID = Adopte.particulierID AND EntiteMobile.entiteID = Adopte.entiteID 
+--				AND Adopte.particulierID = 1;
 
 

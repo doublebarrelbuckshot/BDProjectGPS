@@ -11,12 +11,70 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class PresetQueries {
+	
+	public static void deleteEM(Connection conn, EntiteMobile em) throws SQLException {
+
+		String query = "DELETE FROM ENTITEMOBILE WHERE ENTITEID = " + em.getEntiteID();
+		System.out.println(query);
+
+		//System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeUpdate(query);
+	}
+
+
+
+
+	public static void addArtificiel(Connection conn, Artificiel art) throws SQLException {
+
+		String query = "INSERT INTO Artificiel VALUES "
+				+ "("+ art.getEntiteID() + ", " 
+				+ "\'" + art.getMarque() + "\'" + ", "
+				+ "\'" +art.getModele() + "\'" + ", "
+				+ art.getAnneeFabrication() + ", "
+				+ "\'" +art.getPuissance() + "\'" + ", "
+				+ "\'" + art.getCombustible() + "\'" + ", "
+				+ "\'" +art.getTypeMachine() + "\')" ;
+				
+				
+		System.out.println(query);
+
+		//System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeUpdate(query);
+	}
+
+	public static void addVivant(Connection conn, Vivant viv) throws SQLException {
+		String query = "INSERT INTO VIVANT VALUES " + 
+				"("+ viv.getEntiteID() + ", " 
+				 + "to_date(\'" + viv.getDateNaissanceString() + "\', \'DD/MM/YYYY\'), " +
+				 "to_date(\'" + viv.getDateDecesString() + "\', \'DD/MM/YYYY\'), " +  
+				 "\'" + viv.getEspece() + "\'" + ")";
+
+			
+
+				
+		System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeUpdate(query);
+
+	}
+
+
+	public static void addEM(Connection conn, EntiteMobile em) throws SQLException{
+		String query = "INSERT INTO ENTITEMOBILE VALUES " + 
+				"("+ em.getEntiteID() + ", " + "\'"+  em.getNom() + "\'" + ", " + em.getCapteurID() + ")";
+		System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeUpdate(query);
+
+	}
 
 	public static int getMaxEMID(Connection conn) throws SQLException{
 		String query = "SELECT MAX(entiteID) from EntiteMobile";
 		Statement stmt = (Statement) conn.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
-			int result = 0;
+		int result = 0;
 		while(rs.next()){
 			result = rs.getInt("MAX(ENTITEID)");
 
@@ -41,6 +99,26 @@ public class PresetQueries {
 		Statement stmt = (Statement) conn.createStatement();
 		stmt.executeUpdate(query);
 
+	}
+	
+	public static void updateCapteurGPS(Connection conn, int capteurID,
+			String modele, String fabricant, String precisionGPS, String dateDebut, String dateFin) throws SQLException {
+		String decesOption = "";
+		
+		String query = "UPDATE Capteur_GPS SET " + 
+				"modele = " + "\'" + modele + "\', " +
+				"fabricant = " + "\'" + fabricant + "\', " +
+				"precisionGPS = " + "\'" + precisionGPS + "\', " +
+				"dateDebut = to_date(\'" + dateDebut + "\', \'DD/MM/YYYY\'), " +  
+				"dateFin = to_date(\'" + dateFin + "\', \'DD/MM/YYYY\') "+
+				"WHERE "+
+				"capteurID = "+ capteurID; //"FROM Capteur_GPS";
+
+		//System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeUpdate(query);
+
+		
 	}
 
 	public static void updateVivant(Connection conn, int entiteID, String dateNaissance, String dateDeces, String espece) throws SQLException{
@@ -74,6 +152,7 @@ public class PresetQueries {
 	 * GET ALL Capteur_GPS devices
 	 */
 	public static void getAllCapteur_GPS(Connection conn) throws SQLException{
+		Capteur_GPS.listCapteurGPS = new ArrayList<Capteur_GPS>();
 		String query = "SELECT * FROM Capteur_GPS";
 		Statement stmt = (Statement) conn.createStatement();
 		ResultSet rs = stmt.executeQuery(query);
@@ -108,6 +187,33 @@ public class PresetQueries {
 		}
 		return result;
 	}
+	
+	public static Capteur_GPS getCapteurGPSDetails(Connection conn, int capteurID) throws SQLException {
+	
+		String query = "SELECT capteurID, model, fabricant, " +
+				"precisionGPS, dateDebut, dateFin " +
+				"FROM Capteur_GPS " +
+				"WHERE capteurID  = " + capteurID;
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		Capteur_GPS gps = null;
+		while(rs.next()){
+			int captID = rs.getInt("CapteurID");
+			String model = rs.getString("modele");
+			String fabricant = rs.getString("fabricant");
+			String precisionGPS = rs.getString("precisionGPS");
+			Date dateDebut = rs.getDate("dateDebut");
+			Date dateFin = rs.getDate("dateFin");
+			gps = new Capteur_GPS(captID, model, fabricant, precisionGPS, dateDebut, dateFin);
+
+		}
+		
+		return gps;
+
+	
+	}
+
+	
 
 	public static EntiteMobile getEntiteMobileDetails(Connection conn, EntiteMobile em) throws SQLException{
 		int entiteID = em.getEntiteID();
@@ -165,6 +271,40 @@ public class PresetQueries {
 		return null;
 
 	}
+	
+	public static ArrayList<Capteur_GPS> getCapteursForParticulier(Connection conn, int particulierID) throws SQLException{
+		ArrayList<Capteur_GPS> result = new ArrayList<Capteur_GPS>();
+		String query = "SELECT Capteur_GPS.capteurID, Capteur_GPS.modele, Capteur_GPS.fabricant, " + 
+				"Capteur_GPS.precisionGPS, Capteur_GPS.dateDebut, Capteur_GPS.dateFin " +
+				"FROM " + "Particulier, EntiteMobile, Capteur_GPS, Adopte " +
+				"WHERE Particulier.particulierID = Adopte.particulierID AND EntiteMobile.entiteID = Adopte.entiteID " + 
+				"AND EntiteMobile.capteurID = Capteur_GPS.capteurID " +
+				"AND Adopte.particulierID = " + particulierID;
+
+
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while(rs.next()){
+
+			int capteurID = rs.getInt("capteurID");
+			String modele = rs.getString("modele");
+			String fabricant = rs.getString("modele");
+			String precisionGPS = rs.getString("modele");
+			Date dateDebut = rs.getTimestamp("dateDebut");
+			Date dateFin = rs.getTimestamp("dateFin");
+
+			Capteur_GPS cgps = new Capteur_GPS(capteurID, modele, fabricant,precisionGPS, dateDebut, dateFin);
+			result.add(cgps);	
+		}
+
+		for (Capteur_GPS x : result){
+			System.out.println(x);
+		}
+
+		return result;
+	}
+
+	
 
 	public static ArrayList<EntiteMobile> getEntiteMobileForParticulier(Connection conn, int particulierID) throws SQLException{
 		ArrayList<EntiteMobile> result = new ArrayList<EntiteMobile>();
@@ -249,5 +389,22 @@ public class PresetQueries {
 			System.out.println(x);
 		}
 	}
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+	
+
+
 
 }

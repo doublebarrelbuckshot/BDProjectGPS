@@ -35,17 +35,31 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 
 
 	private ArrayList<EntiteMobile> entiteMobile;
+	private ArrayList<Capteur_GPS> capteurGPS;
 
 
-	//private final JList<String> listCapteurs;
+	private final JList<String> listCapteurs;
 	private final JList<String> listParticuliers;
 	private JList<String> listEntiteMobiles;
 
 
-	//private final DefaultListModel<String> capteursDefaultModel = new DefaultListModel<>();
+	private final DefaultListModel<String> capteursDefaultModel = new DefaultListModel<>();
 	private final DefaultListModel<String> particuliersDefaultModel = new DefaultListModel<>();
 	private DefaultListModel<String>entiteMobilesDefaultModel = new DefaultListModel<>();
 
+public void  refreshGUIFromCGPS(){
+		try {
+			PresetQueries.getAllCapteur_GPS(conn);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		capteursDefaultModel.clear();
+	Capteur_GPS.listCapteurGPS.stream().forEach((item) ->{
+		capteursDefaultModel.addElement(item.printListString());
+	});
+	listCapteurs.repaint();
+
+}
 
 	public  void loadDefaultModels( ) {
 
@@ -58,13 +72,17 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 			particuliersDefaultModel.addElement(item.printListString());
 		});
 
+		Capteur_GPS.listCapteurGPS.stream().forEach((item) ->{
+			capteursDefaultModel.addElement(item.printListString());
+		});
+
 		//listClasses.repaint();
 	}
 
 
 	public GUI(String s, String viewType) throws Exception{
 		super(s);
-		
+
 		GUI.viewType = viewType;
 
 		/*
@@ -156,6 +174,34 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 
 
 
+
+		/*
+		 * ************************************************************
+		 *******************   CAPTEUR GPS JLIST  *******************
+		 * ************************************************************
+		 */
+
+		/*
+		 * SETUP FOR ENTITE MOBILE JLIST
+		 */
+		this.listCapteurs = new JList<>();
+		listCapteurs.setModel(capteursDefaultModel);
+		listCapteurs.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		listCapteurs.addListSelectionListener(this);		
+
+		JScrollPane capteurScroller = new JScrollPane(listCapteurs);
+		capteurScroller.setViewportView(listCapteurs);
+		capteurScroller.setPreferredSize(new Dimension(250, 450));
+		/*
+		 * SETUP FOR ENTITE MOBILE PANEL
+		 */
+		JPanel capteursPanel = new JPanel();
+		capteursPanel.setBorder(new TitledBorder("Tous les Capteurs GPS"));
+		capteursPanel.add(capteurScroller, BorderLayout.WEST);
+
+
+
+
 		/*
 		 * ************************************************************
 		 ******************* ENTITE MOBILE BUTTONS  *******************
@@ -184,7 +230,7 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 
 		//Only init these buttons if the user is admin
 		if(viewType == "admin"){
-			
+
 			/*
 			 * Initialize Edit button
 			 */
@@ -192,7 +238,7 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 			panEMButtons.add(btnEMEdit);
 			btnEMEdit.addActionListener(this);
 			btnEMEdit.setActionCommand("btnEMEdit");
-	
+
 			/*
 			 * Initialize NEW button
 			 */
@@ -201,10 +247,18 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 			btnEMNew.addActionListener(this);
 			btnEMNew.setActionCommand("btnEMNew");
 
+			//			/*
+			//			 * Initialize SHOWALL button
+			//			 */
+			//			JButton btnEMShowAll = new JButton("Show All");
+			//			panEMButtons.add(btnEMShowAll);
+			//			btnEMShowAll.addActionListener(this);
+			//			btnEMShowAll.setActionCommand("btnEMShowAll");
+
 		}
-		
+
 		entiteMobilesPanel.add(panEMButtons, BorderLayout.SOUTH);
-		
+
 		/*
 		 * ************************************************************
 		 ******************* PARTICULIER BUTTONS  *******************
@@ -249,6 +303,47 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 
 
 
+		/*
+		 * ************************************************************
+		 ******************* CAPTEUR GPS BUTTONS  *******************
+		 * ************************************************************
+		 */
+		JPanel panCGPSButtons = new JPanel();
+		panCGPSButtons.setLayout(new GridLayout(4,1));
+
+
+		/*
+		 * Initialize details button
+		 */
+		JButton btnCGPSDetails = new JButton("Details");
+		panCGPSButtons.add(btnCGPSDetails);
+		btnCGPSDetails.addActionListener(this);
+		btnCGPSDetails.setActionCommand("btnCGPSDetails");
+
+		//Only init these buttons if the user is admin
+		if(viewType == "admin"){
+
+			/*
+			 * Initialize Edit button
+			 */
+			JButton btnCGPSEdit = new JButton("Edit");
+			panCGPSButtons.add(btnCGPSEdit);
+			btnCGPSEdit.addActionListener(this);
+			btnCGPSEdit.setActionCommand("btnCGPSEdit");
+
+			/*
+			 * Initialize NEW button
+			 */
+			JButton btnCGPSNew = new JButton("New");
+			panCGPSButtons.add(btnCGPSNew);
+			btnCGPSNew.addActionListener(this);
+			btnCGPSNew.setActionCommand("btnCGPSNew");
+
+
+		}
+
+		capteursPanel.add(panCGPSButtons, BorderLayout.SOUTH);
+
 
 		/*
 		 * ************************************************************
@@ -263,9 +358,9 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 		if(viewType == "admin"){
 			listsPanel.add(particuliersPanel);	
 		}
-		
+
 		listsPanel.add(entiteMobilesPanel);
-		listsPanel.add(new JPanel());
+		listsPanel.add(capteursPanel);
 
 		add(listsPanel, BorderLayout.CENTER);
 
@@ -276,11 +371,11 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 		 * ************************************************************
 		 */
 
-		
+
 		//IF IT IS A USER VIEW, THEN POPULATE THE ENTITE LIST WITH THAT USERS' ENTITIES
 		//ONCE LOGIN IS ESTABLISHED, CHANGE THIS CODE TO REFLECT USER LOGIN.
 		if(GUI.viewType == "user"){
-			
+
 			try {
 				entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, 1);
 				updateEntiteMobileList();
@@ -289,15 +384,15 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
+
 			this.setSize(700,750);	
-			
-			
+
+
 		} else if (GUI.viewType == "admin"){
-			
+
 			this.setSize(1000,750);	
 		}
-		
+
 		this.setVisible(true);
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -350,7 +445,7 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 				catch (SQLException e) {
 					e.printStackTrace();
 				}
-				
+
 				try {
 					EMDetailsGUI newDetails = new EMDetailsGUI("Details: " + selectedEM.getNom(), selectedEM, editableFlag, conn);
 				} catch (SQLException e) {
@@ -359,7 +454,7 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 				}
 			}
 		}
-		
+
 		//IF CLICK ENTITEMOBILE-EDIT
 		else if(action.equals("btnEMEdit")){
 			int selectedEMIndex = listEntiteMobiles.getSelectedIndex();
@@ -371,15 +466,15 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 			else{
 				selectedEM =  entiteMobile.get(selectedEMIndex);
 				Boolean editableFlag = true;
-				
+
 				try {
 					//Get more details depending on if it's Vivant, Artificiel, or just EntiteMobile
 					selectedEM = PresetQueries.getEntiteMobileDetails(conn, selectedEM); 				
-					} 
+				} 
 				catch (SQLException e) {
 					e.printStackTrace();
 				}
-				
+
 				try {
 					EMDetailsGUI newDetails = new EMDetailsGUI("Details: " + selectedEM.getNom(), selectedEM, editableFlag, conn);
 				} catch (SQLException e) {
@@ -389,10 +484,76 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 			}
 		}
 		else if(action.equals("btnEMNew")){
-		
+
 			EMNewGUI newEM = new EMNewGUI("ADD NEW GUI", conn);
 		}
 		
+		else if(action.equals("btnCGPSDetails")){
+			//CGPSDetailsGUI newCGPS = new CGPSDetailsGUI("Details: " + selectedCGPS.getNom(), selectedCGPS, editableFlag, conn);
+			int selectedCGPSIndex = listCapteurs.getSelectedIndex();
+			Capteur_GPS selectedCGPS = null;  
+			if(selectedCGPSIndex == -1){
+				JOptionPane.showMessageDialog(this, "Choose an Capteur GPS that you would like to view in detail!");
+				return;
+			}
+			else{
+				selectedCGPS =  Capteur_GPS.listCapteurGPS.get(selectedCGPSIndex);
+				Boolean editableFlag = false;
+//				try {
+//					//Get more details depending on if it's Vivant, Artificiel, or just EntiteMobile
+//					selectedCGPS = PresetQueries.getCapteurGPSDetails(conn, selectedCGPS);
+//				} 
+//				catch (SQLException e) {
+//					e.printStackTrace();
+//				}
+
+				try {
+					CGPSDetailsGUI newDetails = new CGPSDetailsGUI("Details: " + selectedCGPS.getCaptID() + " : " + selectedCGPS.getModel(), selectedCGPS, editableFlag, conn, this);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		else if(action.equals("btnCGPSEdit")){
+			//CGPSDetailsGUI newCGPS = new CGPSDetailsGUI("Details: " + selectedCGPS.getNom(), selectedCGPS, editableFlag, conn);
+			int selectedCGPSIndex = listCapteurs.getSelectedIndex();
+			Capteur_GPS selectedCGPS = null;  
+			if(selectedCGPSIndex == -1){
+				JOptionPane.showMessageDialog(this, "Choose an Capteur GPS that you would like to view in detail!");
+				return;
+			}
+			else{
+				selectedCGPS =  Capteur_GPS.listCapteurGPS.get(selectedCGPSIndex);
+				Boolean editableFlag = true;
+//				try {
+//					//Get more details depending on if it's Vivant, Artificiel, or just EntiteMobile
+//					selectedCGPS = PresetQueries.getCapteurGPSDetails(conn, selectedCGPS);
+//				} 
+//				catch (SQLException e) {
+//					e.printStackTrace();
+//				}
+
+				try {
+					CGPSDetailsGUI newDetails = new CGPSDetailsGUI("Details: " + selectedCGPS.getCaptID() + " : " + selectedCGPS.getModel(), selectedCGPS, editableFlag, conn, this);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+
+		else if(action.equals("btnCGPSNew")){
+
+		}
+
+		//		else if(action.equals("btnEMShowAll")){
+		//			listParticuliers.clearSelection();
+		//			listEntiteMobiles.setModel(entiteMobilesDefaultModel);
+		//			//listParticuliers.repaint();
+		//			
+		//		}
+
 		else if(action.equals("btnPADetails")){
 			JOptionPane.showMessageDialog(this, "This button (Details) doesn't do anything yet");
 		}
@@ -402,7 +563,7 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 		else if(action.equals("btnPANew")){
 			JOptionPane.showMessageDialog(this, "This button (New) doesn't do anything yet");
 		}
-		
+
 	}
 
 
@@ -414,20 +575,65 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 		});
 		listEntiteMobiles.repaint();
 	}
+	
+	public void updateCapteurGPSList(){
+		capteursDefaultModel.clear();
+
+		this.capteurGPS.stream().forEach((item) -> {
+			capteursDefaultModel.addElement(item.printListString());
+		});
+		listCapteurs.repaint();
+	}
 
 
 	public void valueChanged(ListSelectionEvent e) {
 		if(!e.getValueIsAdjusting()){
 
-			
-			if (e.getSource().equals(listParticuliers)) {
-				
+		if(e.getSource().equals(listCapteurs)){
 				if(GUI.viewType == "user"){
-					
+	//				updateCapteurGPSList();
+				
+//
+//					// GET USER NAME, AND SET THE SELECTED PARTICULIER TO THAT USER.
+//					// THERE IS CURRENTLY NO LOGIN FRAME, SO THIS IF WILL ASSUME UNIVERSITE DE MONTREAL
+//					//
+//					try {
+//						capteurGPS = PresetQueries.getCapteursForParticulier(conn, 1);
+//						updateCapteurGPSList();
+//					} 
+//					catch (Exception e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+			}
+				else if (GUI.viewType == "admin") {
+//					updateCapteurGPSList();
+//					if(listCapteurs.getSelectedIndex() != -1){
+//
+//						programChanged = true;
+//						int capteurGPSid = Capteur_GPS.listCapteurGPS.get(listCapteurs.getSelectedIndex()).getCaptID();
+//						try {
+//							capteurGPS = Capteur_GPS.listCapteurGPS.get(listCapteurs.getSelectedIndex());//PresetQueries.getCapteursForParticulier(conn, capteurGPSid);
+//							//updateCapteurGPSList();
+//						} 
+//						catch (Exception e1) {
+//							// TODO Auto-generated catch block
+//							e1.printStackTrace();
+//						}
+//						programChanged = false;
+//					}
+//				}
+			}
+		}
+			else
+				if (e.getSource().equals(listParticuliers)) {
+
+				if(GUI.viewType == "user"){
+
 					// GET USER NAME, AND SET THE SELECTED PARTICULIER TO THAT USER.
 					// THERE IS CURRENTLY NO LOGIN FRAME, SO THIS IF WILL ASSUME UNIVERSITE DE MONTREAL
 					//
-					
+
 					try {
 						entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, 1);
 						updateEntiteMobileList();
@@ -436,9 +642,9 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
-					
+
 				} else if (GUI.viewType == "admin") {
-					
+
 					if(listParticuliers.getSelectedIndex() != -1){
 
 						programChanged = true;
@@ -490,5 +696,4 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 			}
 		}
 	}
-
 }

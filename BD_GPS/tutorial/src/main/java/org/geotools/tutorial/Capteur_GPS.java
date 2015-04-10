@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -30,13 +31,22 @@ public class Capteur_GPS {
 			this.dateFin = dateFin;	
 	}
 
-	
+	public String printListString(){
+		return captID + ": " + model;
+	}
 
 	public int getCaptID() {
 		return captID;
 	}
 
-
+	public String getDateDebutString(){
+		return new SimpleDateFormat("dd/MM/yyyy").format(this.dateDebut);
+	}
+	
+	public String getDateFinString(){
+		
+		return new SimpleDateFormat("dd/MM/yyyy").format(this.dateFin);
+	}
 
 	public void setCaptID(int captID) {
 		this.captID = captID;

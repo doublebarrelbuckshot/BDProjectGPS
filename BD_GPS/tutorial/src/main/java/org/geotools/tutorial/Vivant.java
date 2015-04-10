@@ -1,5 +1,6 @@
 package org.geotools.tutorial;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -67,6 +68,24 @@ public class Vivant extends EntiteMobile{
 
 	public Date getDateNaissance() {
 		return dateNaissance;
+	}
+	
+	
+	public  void setDateNaissance(String str) throws Exception{
+		  Date date1;
+	     
+			date1 = new SimpleDateFormat("dd/MM/yy").parse(str);
+		
+	      this.dateNaissance = date1;
+	}
+	
+	
+	public void setDateDeces(String str)throws Exception{
+		  Date date1;
+	    
+			date1 = new SimpleDateFormat("dd/MM/yy").parse(str);
+		
+	      this.dateDeces = date1;
 	}
 
 	public void setDateNaissance(Date dateNaissance) {
