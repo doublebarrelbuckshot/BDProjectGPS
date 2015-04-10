@@ -65,16 +65,53 @@ public class App {
 
 	public static final String ADMIN = "admin";
 	public static final String USER = "user";
-	
+	public static Connection conn;
 	
 	public static void main(String[] args) throws Exception {
 		
+		//Initalize connection to the DATABASE
+		makeConn();
+		
 		//CHOOSE GUI TYPE BY LOGIN PARAMETERS ADMIN OR USER
 		GUI gui;
-		gui = new GUI("GPS Tracker", ADMIN);
+		gui = new GUI("GPS Tracker", ADMIN, conn);
 
-		
+
 		//Test the username login query
-//		Map<String, PasswordWrapper> userPassID = PresetQueries.getUsernamesPasswords(gui.conn);
+//		Map<String, PasswordWrapper> userPassID; 
+//		userPassID = PresetQueries.getUsernamesPasswords(conn);
+	}
+	
+	//Connection code
+	//Run this again whenever a connection breaks because of an exception
+	public static void makeConn(){
+		
+		Connection conn = null;
+		try{
+			conn = Connexion.initializeConnexion(conn);
+
+		}
+		catch(Exception ex){
+
+			System.out.println("Connection failed.");
+			ex.printStackTrace();
+		}
+		App.conn = conn;
+	}
+	
+	
+	//Login screen window
+	//Will pass the particulierID to GUI who will show the proper screen 
+	public static void loginScreen(){
+		//JFRAME and some edit texts
+		
+		
+		
 	}
 }
+
+
+
+
+//Test the username login query
+//		Map<String, PasswordWrapper> userPassID = PresetQueries.getUsernamesPasswords(gui.conn);

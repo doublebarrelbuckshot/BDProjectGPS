@@ -1,5 +1,6 @@
 package org.geotools.tutorial;
 
+//This password wrapper class is used when retrieving the user password and ID so as to login as that user 
 public class PasswordWrapper {
 	
 	String password;
@@ -13,7 +14,7 @@ public class PasswordWrapper {
 	public String getPassword(){
 		return this.password;
 	}
-	
+
 	public int getID(){
 		return this.ID;
 	}

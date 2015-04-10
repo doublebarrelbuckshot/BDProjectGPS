@@ -27,7 +27,7 @@ import javax.swing.event.ListSelectionListener;
 ///test Florin 16:07
 public class GUI extends JFrame implements ListSelectionListener, ActionListener{
 
-	static Connection conn;
+	private Connection conn;
 	private int capteurIWantToMap = 101;
 	private Boolean programChanged = false;
 	private static String viewType;
@@ -80,7 +80,7 @@ public void  refreshGUIFromCGPS(){
 	}
 
 
-	public GUI(String s, String viewType) throws Exception{
+	public GUI(String s, String viewType, Connection connection) throws Exception{
 		super(s);
 
 		GUI.viewType = viewType;
@@ -90,16 +90,8 @@ public void  refreshGUIFromCGPS(){
 		 ******************* INITIALIZE CONNECTION  *******************
 		 * ************************************************************
 		 */
-		GUI.conn = null;
-		try{
-			conn = Connexion.initializeConnexion(conn);
-
-		}
-		catch(Exception ex){
-
-			System.out.println("Connection failed.");
-			ex.printStackTrace();
-		}
+		
+		conn = connection;
 
 
 

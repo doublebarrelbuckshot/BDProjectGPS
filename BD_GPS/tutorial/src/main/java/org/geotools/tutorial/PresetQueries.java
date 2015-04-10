@@ -71,6 +71,42 @@ public class PresetQueries {
 		stmt.executeUpdate(query);
 
 	}
+	
+	//CREATE TABLE Particulier(	particulierID INT PRIMARY KEY,
+	//							nom VARCHAR(40), 
+	//							type VARCHAR(20), 
+	//							username VARCHAR(20), 
+	//							password VARCHAR(20), 
+	//							streetNumber varchar(10), 
+	//							streetName VARCHAR(50), 
+	//							city VARCHAR(30), 
+	//							provState VARCHAR(30), 
+	//							country VARCHAR(30), 
+	//							postalCodeZip VARCHAR(7), 
+	//							tel VARCHAR(20));
+	
+	//Add Particulier window query
+	public static void addPA(Connection conn, Particulier pa) throws SQLException{
+		String query = "INSERT INTO PARTICULIER VALUES " + 
+				"("+ pa.getParticulierID() + ", " + 
+				"\'"+ pa.getNom() + "\'" + ", " + 
+				"\'"+ pa.getType() + "\'" + ", " + 
+				"\'"+ pa.getUsername() + "\'" + ", " + 
+				"\'"+ pa.getPassword() + "\'" + ", "+
+				"\'"+ pa.getStreetNumber() + "\'" + ", "+
+				"\'"+ pa.getStreetName() + "\'" + ", "+
+				"\'"+ pa.getCity() + "\'" + ", "+
+				"\'"+ pa.getProvState() + "\'" + ", "+
+				"\'"+ pa.getCountry() + "\'" + ", "+
+				"\'"+ pa.getPostalCodeZip() + "\'" + ", "+
+				"\'"+ pa.getTel() + "\'" + ", "+
+				")";
+		System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeUpdate(query);
+	
+
+	}
 
 	public static int getMaxEMID(Connection conn) throws SQLException{
 		String query = "SELECT MAX(entiteID) from EntiteMobile";
@@ -396,7 +432,7 @@ public class PresetQueries {
 	//This method returns a map of the username passwords and ID necessary for login.
 	public static Map<String, PasswordWrapper> getUsernamesPasswords(Connection conn) throws SQLException{
 		
-		System.out.println("Getting username and passwords...");
+		System.out.println("\nGetting username and passwords...");
 		//Map of usernames and passwords to be returned
 		Map<String, PasswordWrapper> usernamePasswordsMap = new HashMap<String, PasswordWrapper>();
 		
