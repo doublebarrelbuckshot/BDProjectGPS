@@ -6,6 +6,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
@@ -388,6 +390,40 @@ public class PresetQueries {
 		for (Particulier x : Particulier.listParticulier){
 			System.out.println(x);
 		}
+	}
+	
+	
+	//This method returns a map of the username passwords and ID necessary for login.
+	public static Map<String, PasswordWrapper> getUsernamesPasswords(Connection conn) throws SQLException{
+		
+		System.out.println("Getting username and passwords...");
+		//Map of usernames and passwords to be returned
+		Map<String, PasswordWrapper> usernamePasswordsMap = new HashMap<String, PasswordWrapper>();
+		
+		String query = "SELECT * FROM Particulier";
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		
+		while(rs.next()){
+
+			int particulierID = rs.getInt("particulierID");
+			String username = rs.getString("username");
+			String password = rs.getString("password");
+			
+			PasswordWrapper currentWrapper = new PasswordWrapper(password, particulierID);
+			usernamePasswordsMap.put(username, currentWrapper);
+			
+		}
+		
+		for(Map.Entry<String, PasswordWrapper> entry : usernamePasswordsMap.entrySet()){
+			System.out.println(" ");
+			System.out.println("Username: " +entry.getKey());
+			System.out.println("Password: " +entry.getValue().getPassword());
+			System.out.println("ID: " +entry.getValue().getID());
+		}
+		
+		return usernamePasswordsMap;
+		
 	}
 
 

@@ -27,7 +27,7 @@ import javax.swing.event.ListSelectionListener;
 ///test Florin 16:07
 public class GUI extends JFrame implements ListSelectionListener, ActionListener{
 
-	private static Connection conn;
+	static Connection conn;
 	private int capteurIWantToMap = 101;
 	private Boolean programChanged = false;
 	private static String viewType;

@@ -13,6 +13,7 @@ import java.net.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.swing.UIManager;
@@ -72,5 +73,8 @@ public class App {
 		GUI gui;
 		gui = new GUI("GPS Tracker", ADMIN);
 
+		
+		//Test the username login query
+//		Map<String, PasswordWrapper> userPassID = PresetQueries.getUsernamesPasswords(gui.conn);
 	}
 }
