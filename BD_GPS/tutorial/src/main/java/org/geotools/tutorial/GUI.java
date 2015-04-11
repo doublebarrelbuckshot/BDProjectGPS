@@ -423,7 +423,7 @@ public void  refreshGUIFromEM(){
 		if(GUI.viewType == "user"){
 
 			try {
-				entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, 1);
+				entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, ID);
 				updateEntiteMobileList();
 			} 
 			catch (Exception e1) {
