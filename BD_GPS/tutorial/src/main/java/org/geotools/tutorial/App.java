@@ -3,6 +3,8 @@ package org.geotools.tutorial;
 
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.io.BufferedReader;
@@ -16,6 +18,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import org.geotools.data.DataUtilities;
@@ -61,21 +69,76 @@ import com.vividsolutions.jts.geom.GeometryFactory;
 import com.vividsolutions.jts.io.ParseException;
 
 
-public class App {
+public class App implements ActionListener{
 
 	public static final String ADMIN = "admin";
 	public static final String USER = "user";
-	public static Connection conn;
 	
+	public static Connection conn;
+	private String nom_usager;
+	private String pwd;
+	
+	private JPanel pane;
+	private JTextField userText;
+	private JPasswordField passwordText;
+	private static JButton loginButton;
+	private static JButton registerButton;
+	private JLabel mesg_error_usr;
+	private JLabel mesg_error_pwd;
+	
+	public App() {
+
+		
+		// setter les composants
+		pane = new JPanel();
+		pane.setLayout(null);
+
+		JLabel userLabel = new JLabel("User");
+		userLabel.setBounds(10, 10, 80, 25);
+		pane.add(userLabel);
+
+		userText = new JTextField(20);
+		userText.setBounds(100, 10, 160, 25);
+		pane.add(userText);
+
+		JLabel passwordLabel = new JLabel("Password");
+		passwordLabel.setBounds(10, 40, 80, 25);
+		pane.add(passwordLabel);
+
+		passwordText = new JPasswordField(20);
+		passwordText.setBounds(100, 40, 160, 25);
+		pane.add(passwordText);
+
+		loginButton = new JButton("login");
+		loginButton.setBounds(10, 80, 80, 25);
+		pane.add(loginButton);
+		loginButton.addActionListener(this);
+				
+		registerButton = new JButton("register");
+		registerButton.setBounds(180, 80, 80, 25);
+		pane.add(registerButton);
+		
+		mesg_error_usr = new JLabel("");
+		mesg_error_usr.setBounds(80, 120, 80, 25);
+		pane.add(mesg_error_usr);
+		
+		mesg_error_pwd = new JLabel("");
+		mesg_error_pwd.setBounds(80, 140, 120, 25);
+		pane.add(mesg_error_pwd);
+		
+	}
 	public static void main(String[] args) throws Exception {
 		
 		//Initalize connection to the DATABASE
 		makeConn();
 		
-		//CHOOSE GUI TYPE BY LOGIN PARAMETERS ADMIN OR USER
-		GUI gui;
-		gui = new GUI("GPS Tracker", ADMIN, conn);
-
+		//Schedule a job for the event-dispatching thread:
+        //creating and showing this application's GUI.
+        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+            public void run() {
+                createAndShowGUI();
+            }
+        });
 
 		//Test the username login query
 //		Map<String, PasswordWrapper> userPassID; 
@@ -100,12 +163,53 @@ public class App {
 	}
 	
 	
-	//Login screen window
-	//Will pass the particulierID to GUI who will show the proper screen 
-	public static void loginScreen(){
-		//JFRAME and some edit texts
+	
+    private static void createAndShowGUI() {
+    	JFrame frame = new JFrame("Login application");
+		frame.setSize(300, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		
+		App app = new App();
+		frame.add(app.pane);
+		//placeComponents(panel);
+
+		frame.setVisible(true);
+		//GUI gui = new GUI("GPS Tracker");
+
+    }
+    
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if( (e.getActionCommand()).equals("login")) {
+			try {
+				//registerButton.removeActionListener(this);
+				
+				String usr = userText.getText();
+				char[] pwd = passwordText.getPassword();
+				System.out.println(pwd);
+				if(usr.equals("")){
+					mesg_error_usr.setText("User empty !");
+				}
+				
+				if(pwd.length == 0 ){
+					mesg_error_pwd.setText("Password empty !");
+				}
+				
+				if(!usr.equals("") && pwd.length > 0) {
+					
+					GUI gui = new GUI("GPS Tracker", ADMIN, conn);
+				}
+				
+				pane.revalidate();
+		        pane.repaint();
+				//registerButton.addActionListener(this);
+				
+			} catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}
 		
 	}
 }
