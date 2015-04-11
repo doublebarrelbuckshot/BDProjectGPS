@@ -43,6 +43,11 @@ public class Vivant extends EntiteMobile{
 		return result;
 	}
 	
+	
+	public static String dateInStringFormat(Date d){
+		return new SimpleDateFormat("dd/MM/yyyy").format(d);
+	}
+	
 	public String getDateNaissanceString(){
 		return new SimpleDateFormat("dd/MM/yyyy").format(this.dateNaissance);
 	}

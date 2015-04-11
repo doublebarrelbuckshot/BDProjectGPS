@@ -11,7 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 public class PresetQueries {
-	
+
 	public static void deleteEM(Connection conn, EntiteMobile em) throws SQLException {
 
 		String query = "DELETE FROM ENTITEMOBILE WHERE ENTITEID = " + em.getEntiteID();
@@ -35,8 +35,8 @@ public class PresetQueries {
 				+ "\'" +art.getPuissance() + "\'" + ", "
 				+ "\'" + art.getCombustible() + "\'" + ", "
 				+ "\'" +art.getTypeMachine() + "\')" ;
-				
-				
+
+
 		System.out.println(query);
 
 		//System.out.println(query);
@@ -45,15 +45,18 @@ public class PresetQueries {
 	}
 
 	public static void addVivant(Connection conn, Vivant viv) throws SQLException {
-		String query = "INSERT INTO VIVANT VALUES " + 
-				"("+ viv.getEntiteID() + ", " 
-				 + "to_date(\'" + viv.getDateNaissanceString() + "\', \'DD/MM/YYYY\'), " +
-				 "to_date(\'" + viv.getDateDecesString() + "\', \'DD/MM/YYYY\'), " +  
-				 "\'" + viv.getEspece() + "\'" + ")";
+		String query = "INSERT INTO VIVANT VALUES ";// + 
+		if(viv.getDateDeces() == null){
+			query = "INSERT INTO VIVANT(entiteID, dateNaissance, espece) VALUES " + 
+					"("+ viv.getEntiteID() + ", " 
+					+ "to_date(\'" + viv.getDateNaissanceString() + "\', \'DD/MM/YYYY\')," +
+					"\'" + viv.getEspece() + "\'" + ")";
+		}
+		else query += "("+ viv.getEntiteID() + ", " 
+				+ "to_date(\'" + viv.getDateNaissanceString() + "\', \'DD/MM/YYYY\')," +
+				"to_date(\'" + viv.getDateDecesString() + "\', \'DD/MM/YYYY\'), " +  
+				"\'" + viv.getEspece() + "\'" + ")";
 
-			
-
-				
 		System.out.println(query);
 		Statement stmt = (Statement) conn.createStatement();
 		stmt.executeUpdate(query);
@@ -70,6 +73,35 @@ public class PresetQueries {
 
 	}
 
+	public static void newCapteurGPS(Connection conn, Capteur_GPS cgps) throws SQLException {
+		String query = "INSERT INTO CAPTEUR_GPS VALUES " + 
+				"("+ cgps.getCaptID() + ", " + 
+				"\'"+  cgps.getModel()+ "\', " +   
+				"\'"+  cgps.getFabricant()+ "\'," +
+				"\'"+  cgps.getPrecisionGPS()+ "\'," + 
+				"to_date(\'" + cgps.getDateDebutString() + "\', \'DD/MM/YYYY\'), " +
+				"to_date(\'" + cgps.getDateFinString() + "\', \'DD/MM/YYYY\')) ";
+		System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeUpdate(query);
+
+
+	}
+
+
+
+	public static int getMaxCGPSID(Connection conn) throws SQLException{
+		String query = "SELECT MAX(capteurID) from Capteur_GPS";
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		int result = 0;
+		while(rs.next()){
+			result = rs.getInt("MAX(CAPTEURID)");
+
+		}
+		System.out.println("RESULT IS: " + result);
+		return result;
+	}
 	public static int getMaxEMID(Connection conn) throws SQLException{
 		String query = "SELECT MAX(entiteID) from EntiteMobile";
 		Statement stmt = (Statement) conn.createStatement();
@@ -100,11 +132,11 @@ public class PresetQueries {
 		stmt.executeUpdate(query);
 
 	}
-	
+
 	public static void updateCapteurGPS(Connection conn, int capteurID,
 			String modele, String fabricant, String precisionGPS, String dateDebut, String dateFin) throws SQLException {
 		String decesOption = "";
-		
+
 		String query = "UPDATE Capteur_GPS SET " + 
 				"modele = " + "\'" + modele + "\', " +
 				"fabricant = " + "\'" + fabricant + "\', " +
@@ -118,15 +150,15 @@ public class PresetQueries {
 		Statement stmt = (Statement) conn.createStatement();
 		stmt.executeUpdate(query);
 
-		
+
 	}
 
-	public static void updateVivant(Connection conn, int entiteID, String dateNaissance, String dateDeces, String espece) throws SQLException{
+	public static void updateVivant(Connection conn, int entiteID, Date dateNaissance, Date dateDeces, String espece) throws SQLException{
 		String decesOption = "";
-		if(!dateDeces.equals("")){
-			decesOption = "Vivant.dateDeces = to_date(\'" + dateDeces + "\', \'DD/MM/YYYY\'), ";
+		if(dateDeces != null){
+			decesOption = "Vivant.dateDeces = to_date(\'" + Vivant.dateInStringFormat(dateDeces) + "\', \'DD/MM/YYYY\'), ";
 		}
-		String query = "UPDATE Vivant SET Vivant.dateNaissance = to_date(\'" + dateNaissance + "\', \'DD/MM/YYYY\'), " +  
+		String query = "UPDATE Vivant SET Vivant.dateNaissance = to_date(\'" + Vivant.dateInStringFormat(dateNaissance) + "\', \'DD/MM/YYYY\'), " +  
 				decesOption +
 				"Vivant.espece = " + "\'" + espece + "\'" + " WHERE "+
 				"Vivant.entiteID = "+ entiteID; //"FROM Capteur_GPS";
@@ -143,6 +175,7 @@ public class PresetQueries {
 		//System.out.println(capteurID + " " + entiteID + " " + nom);
 		String query = "UPDATE EntiteMobile SET EntiteMobile.nom = \'" + nom + "\', EntiteMobile.capteurID = " + capteurID + " WHERE "+
 				"EntiteMobile.entiteID = "+ entiteID; //"FROM Capteur_GPS";
+		System.out.println("!!!!!!!!!!!!!!!!!!!!!" + query);
 		Statement stmt = (Statement) conn.createStatement();
 		stmt.executeUpdate(query);
 	}
@@ -187,9 +220,9 @@ public class PresetQueries {
 		}
 		return result;
 	}
-	
+
 	public static Capteur_GPS getCapteurGPSDetails(Connection conn, int capteurID) throws SQLException {
-	
+
 		String query = "SELECT capteurID, model, fabricant, " +
 				"precisionGPS, dateDebut, dateFin " +
 				"FROM Capteur_GPS " +
@@ -207,13 +240,13 @@ public class PresetQueries {
 			gps = new Capteur_GPS(captID, model, fabricant, precisionGPS, dateDebut, dateFin);
 
 		}
-		
+
 		return gps;
 
-	
+
 	}
 
-	
+
 
 	public static EntiteMobile getEntiteMobileDetails(Connection conn, EntiteMobile em) throws SQLException{
 		int entiteID = em.getEntiteID();
@@ -271,7 +304,7 @@ public class PresetQueries {
 		return null;
 
 	}
-	
+
 	public static ArrayList<Capteur_GPS> getCapteursForParticulier(Connection conn, int particulierID) throws SQLException{
 		ArrayList<Capteur_GPS> result = new ArrayList<Capteur_GPS>();
 		String query = "SELECT Capteur_GPS.capteurID, Capteur_GPS.modele, Capteur_GPS.fabricant, " + 
@@ -304,7 +337,7 @@ public class PresetQueries {
 		return result;
 	}
 
-	
+
 
 	public static ArrayList<EntiteMobile> getEntiteMobileForParticulier(Connection conn, int particulierID) throws SQLException{
 		ArrayList<EntiteMobile> result = new ArrayList<EntiteMobile>();
@@ -398,12 +431,16 @@ public class PresetQueries {
 
 
 
-	
 
 
 
 
-	
+
+
+
+
+
+
 
 
 

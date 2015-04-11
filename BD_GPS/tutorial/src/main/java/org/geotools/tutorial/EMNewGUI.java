@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Properties;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -20,6 +21,10 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
+
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 public class EMNewGUI extends JFrame implements ActionListener {
 
@@ -53,9 +58,15 @@ public class EMNewGUI extends JFrame implements ActionListener {
 	private ArrayList<String> capteurIDs;
 	private Connection conn;
 
-	public EMNewGUI(String s, Connection conn){
+	private UtilDateModel modelDateNaissance;
+	private UtilDateModel modelDateDeces;
+	private Properties p;
+	private GUI gui;
+
+	public EMNewGUI(String s, Connection conn, GUI gui){
 		super(s);
 		this.conn = conn;
+		this.gui = gui;
 		int entiteID = 0;
 		try {
 			entiteID = PresetQueries.getMaxEMID(conn);
@@ -184,10 +195,41 @@ public class EMNewGUI extends JFrame implements ActionListener {
 		vivantEspeceTF = new JTextField();
 
 
+		p = new Properties();
+		p.put("text.today", "Today");
+		p.put("text.month", "Month");
+		p.put("text.year", "Year");
+
+
+		modelDateNaissance = new UtilDateModel();
+
+		modelDateDeces= new UtilDateModel();
+
+		JDatePanelImpl datePanelDateNaissance= null;
+		JDatePickerImpl datePickerDateNaissance = null;
+
+		JDatePanelImpl datePanelDateDeces = null;
+		JDatePickerImpl datePickerDateDeces= null;
+
+		modelDateNaissance.setValue(new Date());
+		modelDateDeces.setValue(null);
+		//modelDateDeces.setValue();
+		datePanelDateNaissance = new JDatePanelImpl(modelDateNaissance, p);
+		datePickerDateNaissance = new JDatePickerImpl(datePanelDateNaissance, new DateLabelFormatter());
+
+		datePanelDateDeces = new JDatePanelImpl(modelDateDeces, p);
+		datePickerDateDeces = new JDatePickerImpl(datePanelDateDeces, new DateLabelFormatter());
+
+
+
 		PanEMNewVivant.add(vivantDateNaissanceLabel);
-		PanEMNewVivant.add(vivantDateNaissanceTF);
+		//PanEMNewVivant.add(vivantDateNaissanceTF);
+		PanEMNewVivant.add(datePickerDateNaissance);
+
 		PanEMNewVivant.add(vivantDateDecesLabel);
-		PanEMNewVivant.add(vivantDateDecesTF);
+		//PanEMNewVivant.add(vivantDateDecesTF);
+		PanEMNewVivant.add(datePickerDateDeces);
+
 		PanEMNewVivant.add(vivantEspeceLabel);
 		PanEMNewVivant.add(vivantEspeceTF);
 		PanEMNewVivant.add(new JPanel());
@@ -311,7 +353,12 @@ public class EMNewGUI extends JFrame implements ActionListener {
 			EntiteMobile em = new EntiteMobile();
 			Vivant viv = new Vivant();
 			Artificiel art = new Artificiel();
+			if(entiteIDTF.getText().equals("") ||  nomTF.getText().equals(""))
 
+			{
+				JOptionPane.showMessageDialog(this, "MISSING VALUES FOR ENTITEMOBILE");
+				valid = false;
+			}
 			//if(!showArtVivOptions){
 			em.setEntiteID(Integer.parseInt(entiteIDTF.getText()));
 			System.out.println(Integer.parseInt(capteurIDs.get(this.capteurIDCB.getSelectedIndex())) + "");
@@ -319,25 +366,49 @@ public class EMNewGUI extends JFrame implements ActionListener {
 			em.setNom(nomTF.getText());
 
 
+
 			//}
 
 			if(showArtVivOptions){
 				if(isVivant){
-					viv.setEntiteID(Integer.parseInt(entiteIDTF.getText()));
-					viv.setEspece(vivantEspeceTF.getText());
-					try {
-						viv.setDateDeces(vivantDateDecesTF.getText());
-						viv.setDateNaissance(vivantDateNaissanceTF.getText());
-
-					} catch (Exception pe) {
-						JOptionPane.showMessageDialog(this, "Problem with date format!, use format DD/MM/YYYY");
+					
+					if(entiteIDTF.getText().equals("") || vivantEspeceTF.getText().equals("") )
+					{
+						JOptionPane.showMessageDialog(this, "MISSING VALUES FOR VIVANT");
 						valid = false;
+
 					}
 					
+					viv.setEntiteID(Integer.parseInt(entiteIDTF.getText()));
+					viv.setEspece(vivantEspeceTF.getText());
+					viv.setDateNaissance(modelDateNaissance.getValue());
+					viv.setDateDeces(modelDateDeces.getValue());
+
+
+					//					try {
+					//						viv.setDateDeces(vivantDateDecesTF.getText());
+					//						viv.setDateNaissance(vivantDateNaissanceTF.getText());
+					//
+					//					} catch (Exception pe) {
+					//						JOptionPane.showMessageDialog(this, "Problem with date format!, use format DD/MM/YYYY");
+					//						valid = false;
+					//					}
+
 
 
 				}
 				else{ //it's artificiel
+					if(entiteIDTF.getText().equals("") || artificielMarqueTF.getText().equals("")
+							|| artificielAnneeFabricationTF.getText().equals("")
+							|| artificielPuissanceTF.getText().equals("")
+							|| artificielModeleTF.getText().equals("")
+							|| artificielCombustibleTF.getText().equals("")
+							|| artificielTypeMachineTF.getText().equals(""))
+					{
+						JOptionPane.showMessageDialog(this, "MISSING VALUES FOR ARTIFICIEL");
+						valid = false;
+					}
+					
 					try{
 						art.setEntiteID(Integer.parseInt(entiteIDTF.getText()));
 						art.setMarque(artificielMarqueTF.getText());
@@ -366,47 +437,57 @@ public class EMNewGUI extends JFrame implements ActionListener {
 					//	e.printStackTrace();
 				}
 				System.out.println("NEW EM CREATED");
+				if(showArtVivOptions){
+					if (valid && isVivant){
+		
+					
+							try {
+								PresetQueries.addVivant(conn, viv);
+							} catch (SQLException e) {
+								JOptionPane.showMessageDialog(this, "ERROR, Vivant and EntiteMobile not added");
+								valid = false;
+								try {
+									PresetQueries.deleteEM(conn, em);
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
 
-				if (valid && isVivant){
-					try {
-						PresetQueries.addVivant(conn, viv);
-					} catch (SQLException e) {
-						JOptionPane.showMessageDialog(this, "ERROR, Vivant and EntiteMobile not added");
-						valid = false;
-						try {
-							PresetQueries.deleteEM(conn, em);
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
+							}
 						
+						//System.out.println("NEW VIVANT CREATED");
 					}
-					System.out.println("NEW VIVANT CREATED");
-				}
-				
-				if(valid && !isVivant){ //add artificiel
-					try {
-						PresetQueries.addArtificiel(conn, art);
-					} catch (SQLException e) {
-						JOptionPane.showMessageDialog(this, "ERROR, ARTIFICIEL and EntiteMobile not added");
-						valid = false;
-						try {
-							PresetQueries.deleteEM(conn, em);
-						} catch (SQLException e1) {
-							// TODO Auto-generated catch block
-							e1.printStackTrace();
-						}
 
-						e.printStackTrace();
+					if(valid && !isVivant){ //add artificiel
+
+						
+					
+							try {
+								PresetQueries.addArtificiel(conn, art);
+							} catch (SQLException e) {
+								JOptionPane.showMessageDialog(this, "ERROR, ARTIFICIEL and EntiteMobile not added");
+								valid = false;
+								try {
+									PresetQueries.deleteEM(conn, em);
+								} catch (SQLException e1) {
+									// TODO Auto-generated catch block
+									e1.printStackTrace();
+								}
+
+								e.printStackTrace();
+							}
+						
+						//System.out.println("NEW ARTIFICIEL CREATED");
 					}
-					System.out.println("NEW ARTIFICIEL CREATED");
+
 				}
-
-
 
 			}
-			if(valid)
+			if(valid){
+				gui.refreshGUIFromEM();
 				this.dispose();
+
+			}
 
 		}
 

@@ -10,6 +10,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Properties;
 
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -19,10 +21,14 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 public class EMDetailsGUI extends JFrame implements ActionListener {
 	private String EMType="";
-	
-	
+
+
 	private JLabel entiteIDTF;
 	private JTextField nomTF;
 	private JComboBox capteurIDCB;
@@ -38,11 +44,18 @@ public class EMDetailsGUI extends JFrame implements ActionListener {
 	private Connection conn;
 
 
-	public EMDetailsGUI(String s, EntiteMobile em, Boolean editableFlag, Connection conn) throws SQLException{
+	private UtilDateModel modelDateNaissance;
+	private UtilDateModel modelDateDeces;
+	private Properties p;
+	private EntiteMobile em;
+	private GUI gui;
+
+	public EMDetailsGUI(String s, EntiteMobile em, Boolean editableFlag, Connection conn, GUI gui) throws SQLException{
 		super(s);
 
 		this.conn = conn;
-
+		this.em = em;
+		this.gui = gui;
 		//SET UP MAIN PANEL OF INFO
 
 		JPanel PanEMDetails = new JPanel();
@@ -120,10 +133,50 @@ public class EMDetailsGUI extends JFrame implements ActionListener {
 			vivantEspeceTF = new JTextField(v.getEspece());
 
 
+
+
+			p = new Properties();
+			p.put("text.today", "Today");
+			p.put("text.month", "Month");
+			p.put("text.year", "Year");
+
+
+			modelDateNaissance = new UtilDateModel();
+			modelDateDeces= new UtilDateModel();
+
+			JDatePanelImpl datePanelDateNaissance= null;
+			JDatePickerImpl datePickerDateNaissance = null;
+
+			JDatePanelImpl datePanelDateDeces = null;
+			JDatePickerImpl datePickerDateDeces= null;
+
+			if(editableFlag){
+				modelDateNaissance.setValue(v.getDateNaissance());
+				modelDateDeces.setValue(v.getDateDeces());
+				datePanelDateNaissance = new JDatePanelImpl(modelDateNaissance, p);
+				datePickerDateNaissance = new JDatePickerImpl(datePanelDateNaissance, new DateLabelFormatter());
+
+				datePanelDateDeces = new JDatePanelImpl(modelDateDeces, p);
+				datePickerDateDeces = new JDatePickerImpl(datePanelDateDeces, new DateLabelFormatter());
+			}
+
+
+
+
+
+
 			PanEMDetails.add(vivantDateNaissanceLabel);
-			PanEMDetails.add(vivantDateNaissanceTF);
+			if(editableFlag)
+				PanEMDetails.add(datePickerDateNaissance);
+			else
+				PanEMDetails.add(vivantDateNaissanceTF);
 			PanEMDetails.add(vivantDateDecesLabel);
-			PanEMDetails.add(vivantDateDecesTF);
+
+			if(editableFlag)
+				PanEMDetails.add(datePickerDateDeces);
+			else
+				PanEMDetails.add(vivantDateDecesTF);
+
 			PanEMDetails.add(vivantEspeceLabel);
 			PanEMDetails.add(vivantEspeceTF);
 
@@ -242,14 +295,14 @@ public class EMDetailsGUI extends JFrame implements ActionListener {
 		} catch(NumberFormatException pe){
 			return false;
 		}
-		
+
 		if(i<= Calendar.getInstance().get(Calendar.YEAR))
 			return true;
-		
+
 		return false;
 	}
-	
-	
+
+
 	public static boolean isValidDate(String inDate) {
 		if(inDate.equals("")) return true;
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/YYYY");
@@ -263,7 +316,7 @@ public class EMDetailsGUI extends JFrame implements ActionListener {
 		return true;
 	}
 
-	
+
 
 	@Override
 	public void actionPerformed(ActionEvent ae) {
@@ -278,56 +331,88 @@ public class EMDetailsGUI extends JFrame implements ActionListener {
 		if(action.equals("btnSave")){
 			boolean success = true;
 			boolean updatedEntiteMobile = true;
-			try {
-				PresetQueries.updateEntiteMobile(conn, Integer.parseInt(entiteIDTF.getText()), nomTF.getText(), Integer.parseInt(capteurIDCB.getSelectedItem().toString()));
-			}  catch (NumberFormatException | SQLException e) {
-				JOptionPane.showMessageDialog(this, e.getMessage());
+			if(entiteIDTF.getText().equals("") ||  nomTF.getText().equals(""))
+			{
+				JOptionPane.showMessageDialog(this, "MISSING VALUES FOR ENTITEMOBILE");
 				updatedEntiteMobile = false;
 			}
-
+			if(updatedEntiteMobile){
+				try {
+					PresetQueries.updateEntiteMobile(conn, Integer.parseInt(entiteIDTF.getText()), nomTF.getText(), Integer.parseInt(capteurIDCB.getSelectedItem().toString()));
+				}  catch (NumberFormatException | SQLException e) {
+					JOptionPane.showMessageDialog(this, e.getMessage());
+					updatedEntiteMobile = false;
+				}
+			}
 			if(EMType.equals("Artificiel") && updatedEntiteMobile){
-				if( isValidInt(artificielAnneeFabricationTF.getText()) == false)
+				if(entiteIDTF.getText().equals("") || artificielMarqueTF.getText().equals("")
+						|| artificielAnneeFabricationTF.getText().equals("")
+						|| artificielPuissanceTF.getText().equals("")
+						|| artificielModeleTF.getText().equals("")
+						|| artificielCombustibleTF.getText().equals("")
+						|| artificielTypeMachineTF.getText().equals(""))
+				{
+					JOptionPane.showMessageDialog(this, "MISSING VALUES FOR ARTIFICIEL");
+					success = false;
+				}
+				if( isValidInt(artificielAnneeFabricationTF.getText()) == false){
 					JOptionPane.showMessageDialog(this, "Enter a valid Annee Fabrication!");
-				else{
+					success = false;
+				}
+
+				if(success){
 					try {
 						PresetQueries.updateArtificiel(conn, Integer.parseInt(entiteIDTF.getText()), 
 								artificielMarqueTF.getText(), artificielModeleTF.getText(), 
-									Integer.parseInt(artificielAnneeFabricationTF.getText()), artificielPuissanceTF.getText(),
-									artificielCombustibleTF.getText(), artificielTypeMachineTF.getText());
+								Integer.parseInt(artificielAnneeFabricationTF.getText()), artificielPuissanceTF.getText(),
+								artificielCombustibleTF.getText(), artificielTypeMachineTF.getText());
 					} catch (NumberFormatException | SQLException e) {
 						e.printStackTrace();
 						JOptionPane.showMessageDialog(this, e.getMessage());
 						success = false;
 					}
+					if(success){
+						gui.refreshGUIFromEM();
+						this.dispose();
 
-					this.dispose();
+					}
 				}	
 			}
-			
+
 
 			if(EMType.equals("Vivant") && updatedEntiteMobile){
-				if( vivantDateNaissanceTF.getText().equals("") || isValidDate(vivantDateNaissanceTF.getText()) == false || isValidDate(vivantDateDecesTF.getText()) == false)
+				//				if( vivantDateNaissanceTF.getText().equals("") || isValidDate(vivantDateNaissanceTF.getText()) == false || isValidDate(vivantDateDecesTF.getText()) == false)
+				//				{
+				//					JOptionPane.showMessageDialog(this, "Ensure Date de Naissance and Date Deces are properly formatted");
+				//				}
+				//else{
+
+				if(entiteIDTF.getText().equals("") || vivantEspeceTF.getText().equals("") )
 				{
-					JOptionPane.showMessageDialog(this, "Ensure Date de Naissance and Date Deces are properly formatted");
+					JOptionPane.showMessageDialog(this, "MISSING VALUES FOR VIVANT");
+					success = false;
+
 				}
-				else{
-					
-						try {
-							PresetQueries.updateVivant(conn, Integer.parseInt(entiteIDTF.getText()), 
-									vivantDateNaissanceTF.getText(), vivantDateDecesTF.getText(), vivantEspeceTF.getText());
-						} catch (NumberFormatException | SQLException e) {
-							JOptionPane.showMessageDialog(this, e.getMessage());
-							success = false;
-						}
-					
-					if(success){
-						this.dispose();
+				if(success){
+
+					try {
+						PresetQueries.updateVivant(conn, Integer.parseInt(entiteIDTF.getText()), 
+								modelDateNaissance.getValue(), modelDateDeces.getValue(), vivantEspeceTF.getText());
+					} catch (NumberFormatException | SQLException e) {
+						JOptionPane.showMessageDialog(this, e.getMessage());
+						success = false;
 					}
 				}
+				if(success){
+					gui.refreshGUIFromEM();
+					this.dispose();
+				}
+				//}
 			}
 			if(EMType.equals("EntiteMobile"))
 			{
 				if(success){
+					gui.refreshGUIFromEM();
 					this.dispose();
 				}
 			}

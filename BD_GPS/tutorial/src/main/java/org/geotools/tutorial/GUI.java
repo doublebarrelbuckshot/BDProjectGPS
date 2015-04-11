@@ -61,6 +61,56 @@ public void  refreshGUIFromCGPS(){
 
 }
 
+
+public void  refreshGUIFromEM(){
+	
+	if(GUI.viewType == "user"){
+
+		// GET USER NAME, AND SET THE SELECTED PARTICULIER TO THAT USER.
+		// THERE IS CURRENTLY NO LOGIN FRAME, SO THIS IF WILL ASSUME UNIVERSITE DE MONTREAL
+		//
+
+		try {
+			entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, 1);
+			updateEntiteMobileList();
+		} 
+		catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+
+	} else if (GUI.viewType == "admin") {
+
+		if(listParticuliers.getSelectedIndex() != -1){
+
+			programChanged = true;
+			int particulierID = Particulier.listParticulier.get(listParticuliers.getSelectedIndex()).getParticulierID();
+			try {
+				entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, particulierID);
+				updateEntiteMobileList();
+			} 
+			catch (Exception e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			programChanged = false;
+		}
+	}
+
+//	try {
+//		PresetQueries.getAllCapteur_GPS(conn);
+//	} catch (SQLException e) {
+//		e.printStackTrace();
+//	}
+//	capteursDefaultModel.clear();
+//Capteur_GPS.listCapteurGPS.stream().forEach((item) ->{
+//	capteursDefaultModel.addElement(item.printListString());
+//});
+//listCapteurs.repaint();
+
+}
+
+
 	public  void loadDefaultModels( ) {
 
 
@@ -447,7 +497,7 @@ public void  refreshGUIFromCGPS(){
 				}
 
 				try {
-					EMDetailsGUI newDetails = new EMDetailsGUI("Details: " + selectedEM.getNom(), selectedEM, editableFlag, conn);
+					EMDetailsGUI newDetails = new EMDetailsGUI("Details: " + selectedEM.getNom(), selectedEM, editableFlag, conn, this);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -476,7 +526,7 @@ public void  refreshGUIFromCGPS(){
 				}
 
 				try {
-					EMDetailsGUI newDetails = new EMDetailsGUI("Details: " + selectedEM.getNom(), selectedEM, editableFlag, conn);
+					EMDetailsGUI newDetails = new EMDetailsGUI("Details: " + selectedEM.getNom(), selectedEM, editableFlag, conn, this);
 				} catch (SQLException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -485,7 +535,7 @@ public void  refreshGUIFromCGPS(){
 		}
 		else if(action.equals("btnEMNew")){
 
-			EMNewGUI newEM = new EMNewGUI("ADD NEW GUI", conn);
+			EMNewGUI newEM = new EMNewGUI("ADD NEW GUI", conn, this);
 		}
 		
 		else if(action.equals("btnCGPSDetails")){
@@ -498,7 +548,7 @@ public void  refreshGUIFromCGPS(){
 			}
 			else{
 				selectedCGPS =  Capteur_GPS.listCapteurGPS.get(selectedCGPSIndex);
-				Boolean editableFlag = false;
+				String editableFlag = "Details";
 //				try {
 //					//Get more details depending on if it's Vivant, Artificiel, or just EntiteMobile
 //					selectedCGPS = PresetQueries.getCapteurGPSDetails(conn, selectedCGPS);
@@ -525,7 +575,7 @@ public void  refreshGUIFromCGPS(){
 			}
 			else{
 				selectedCGPS =  Capteur_GPS.listCapteurGPS.get(selectedCGPSIndex);
-				Boolean editableFlag = true;
+				String editableFlag = "Edit";
 //				try {
 //					//Get more details depending on if it's Vivant, Artificiel, or just EntiteMobile
 //					selectedCGPS = PresetQueries.getCapteurGPSDetails(conn, selectedCGPS);
@@ -544,6 +594,24 @@ public void  refreshGUIFromCGPS(){
 		}
 
 		else if(action.equals("btnCGPSNew")){
+			int newCGPSID = 0;
+			try {
+				newCGPSID = PresetQueries.getMaxCGPSID(conn);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			newCGPSID++;
+			Capteur_GPS newCGPS = new Capteur_GPS();
+			newCGPS.setCaptID(newCGPSID);
+			String editableFlag = "New";
+			try {
+				CGPSDetailsGUI newDetails = new CGPSDetailsGUI("New Capteur_GPS: " + newCGPS.getCaptID(), newCGPS, editableFlag, conn, this);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		}
 

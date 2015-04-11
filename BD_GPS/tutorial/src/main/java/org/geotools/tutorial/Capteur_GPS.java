@@ -31,6 +31,9 @@ public class Capteur_GPS {
 			this.dateFin = dateFin;	
 	}
 
+	public Capteur_GPS() {
+	}
+
 	public String printListString(){
 		return captID + ": " + model;
 	}
@@ -39,12 +42,34 @@ public class Capteur_GPS {
 		return captID;
 	}
 
+	
+	public  void setDateDebut(String str) throws Exception{
+		  Date date1;
+	     
+			date1 = new SimpleDateFormat("dd/MM/yy").parse(str);
+		
+	      this.dateDebut = date1;
+	}
+	
+	
+	public void setDateFin(String str)throws Exception{
+		  Date date1;
+	    
+			date1 = new SimpleDateFormat("dd/MM/yy").parse(str);
+		
+	      this.dateFin = date1;
+	}
+	
+	
 	public String getDateDebutString(){
+		if (this.dateDebut == null)
+			return "";
 		return new SimpleDateFormat("dd/MM/yyyy").format(this.dateDebut);
 	}
 	
 	public String getDateFinString(){
-		
+		if (this.dateDebut == null)
+			return "";
 		return new SimpleDateFormat("dd/MM/yyyy").format(this.dateFin);
 	}
 
