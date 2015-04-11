@@ -21,7 +21,12 @@ REMAINING TASKS:
     
   - GPS device tracking tab
     - New device
-    - Edit device
+    - Edit device         Done
+    - 
+  - EntiteMobile
+    - New EM              Done
+    - New Vivant          Done
+    - New Artificielle    Done
   
   - Feature Info
     - Include Scientific data

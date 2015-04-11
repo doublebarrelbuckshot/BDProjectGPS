@@ -5,6 +5,10 @@ import java.sql.DriverManager;
 
 public class Connexion {
 	
+	//Use alternate username and password when Connection fails
+	String altUsr = "courtemp";
+	String altPwd = "empp099C";
+	
 	public static Connection initializeConnexion(Connection conn) throws Exception{
 		String url = "jdbc:oracle:thin:@delphes.iro.umontreal.ca:1521:a05";		
 		String usr = "rizzigia";
