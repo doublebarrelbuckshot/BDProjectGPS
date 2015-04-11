@@ -13,6 +13,7 @@ import java.io.FileReader;
 import java.sql.*;
 import java.net.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -86,6 +87,10 @@ public class App implements ActionListener{
 	private JLabel mesg_error_usr;
 	private JLabel mesg_error_pwd;
 	
+	
+	//LOGIN WINDOW
+	private static JFrame loginWindow;
+	
 	public App() {
 
 		
@@ -129,6 +134,7 @@ public class App implements ActionListener{
 	}
 	public static void main(String[] args) throws Exception {
 		
+		
 		//Initalize connection to the DATABASE
 		makeConn();
 		
@@ -165,15 +171,15 @@ public class App implements ActionListener{
 	
 	
     private static void createAndShowGUI() {
-    	JFrame frame = new JFrame("Login application");
-		frame.setSize(300, 300);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+    	loginWindow = new JFrame("Login application");
+    	loginWindow.setSize(300, 300);
+    	loginWindow.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		App app = new App();
-		frame.add(app.pane);
+		loginWindow.add(app.pane);
 		//placeComponents(panel);
 
-		frame.setVisible(true);
+		loginWindow.setVisible(true);
 		//GUI gui = new GUI("GPS Tracker");
 
     }
@@ -181,24 +187,53 @@ public class App implements ActionListener{
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		// TODO Auto-generated method stub
+		
+		
 		if( (e.getActionCommand()).equals("login")) {
 			try {
 				//registerButton.removeActionListener(this);
 				
+				System.out.println("LOGIN BUTTON CLICKED");
 				String usr = userText.getText();
 				char[] pwd = passwordText.getPassword();
+				
 				System.out.println(pwd);
+				
+				Map<String, PasswordWrapper> userPassID; 
+				userPassID = PresetQueries.getUsernamesPasswords(conn);
+				
 				if(usr.equals("")){
 					mesg_error_usr.setText("User empty !");
+					System.out.println("User empty!");
 				}
 				
 				if(pwd.length == 0 ){
 					mesg_error_pwd.setText("Password empty !");
+					System.out.println("Password empty!");
 				}
 				
-				if(!usr.equals("") && pwd.length > 0) {
-					
-					GUI gui = new GUI("GPS Tracker", ADMIN, conn);
+				if(usr.equals("admin") && (isCorrectPassword(pwd, "admin")) ){
+					GUI gui = new GUI("GPS Tracker", ADMIN, 0, conn);
+					loginWindow.setVisible(false);
+				}
+				
+				if(!usr.equals("") && (pwd.length > 0) && (!usr.equals("admin"))) {
+
+
+					PasswordWrapper tempWrapper = userPassID.get(usr);
+										
+					if(tempWrapper == null){
+						System.out.println("Incorrect username or password");
+						
+					}else if(isCorrectPassword(pwd, tempWrapper.getPassword() )) {
+						
+						int ID = tempWrapper.getID();
+						System.out.println("The password to that username is: "+tempWrapper.getPassword());
+						System.out.println("The pID to that username is: "+ID);
+						
+						GUI gui = new GUI("GPS Tracker", USER, ID, conn);
+						loginWindow.setVisible(false);
+					}
 				}
 				
 				pane.revalidate();
@@ -211,6 +246,27 @@ public class App implements ActionListener{
 			}
 		}
 		
+	}
+	
+	// Method verifies validity of the password
+	private static boolean isCorrectPassword(char[] input, String pass) {
+		
+	    boolean  valid = true;
+	    char[] correctPassword = pass.toCharArray();
+
+	    
+	    if (input.length != correctPassword.length) {
+	    	valid = false;
+	        
+	    } else {
+	    	valid = Arrays.equals(input, correctPassword);
+	        
+	    }
+
+	    //Zero out the password
+	    Arrays.fill(correctPassword,'0');
+
+	    return valid;
 	}
 }
 

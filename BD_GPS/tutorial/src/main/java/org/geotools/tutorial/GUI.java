@@ -130,7 +130,7 @@ public void  refreshGUIFromEM(){
 	}
 
 
-	public GUI(String s, String viewType, Connection connection) throws Exception{
+	public GUI(String s, String viewType, int ID, Connection connection) throws Exception{
 		super(s);
 
 		GUI.viewType = viewType;
@@ -142,9 +142,6 @@ public void  refreshGUIFromEM(){
 		 */
 		
 		conn = connection;
-
-
-
 
 
 		/*
