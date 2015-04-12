@@ -262,6 +262,29 @@ public class PresetQueries {
 
 
 	}
+	
+	public static void updateParticulier(Connection conn, int particulierID,
+			String nom, String type, String username, String streetNumber, String streetName, String city, String provState, String country, String postalCodeZip, String tel) throws SQLException {
+
+		String query = "UPDATE Particulier SET " + 
+				"nom = " + "\'" + nom + "\', " +
+				"type = " + "\'" + type + "\', " +
+				"username = " + "\'" + username + "\', " +
+				"streetNumber = " + "\'" + streetNumber + "\', " +
+				"streetName = " + "\'" + streetName + "\', " +
+				"city = " + "\'" + city + "\', " +
+				"provState = " + "\'" + provState + "\', " +
+				"country = " + "\'" + country + "\', " +
+				"postalCodeZip = " + "\'" + postalCodeZip + "\', " +
+				"tel = " + "\'" + tel + "\' " +
+				"WHERE "+
+				"particulierID = "+ particulierID;
+
+		//System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeUpdate(query);
+
+	}
 
 	public static void updateVivant(Connection conn, int entiteID, Date dateNaissance, Date dateDeces, String espece) throws SQLException{
 		String decesOption = "";
@@ -357,7 +380,40 @@ public class PresetQueries {
 	}
 
 
+	public static Particulier getParticulierDetails(Connection conn, int paID) throws SQLException{
 
+		String query = "SELECT Particulier.particulierID, Particulier.nom, Particulier.username, " +
+				"Particulier.streetNumber, Particulier.city, Particulier.provState, Particulier.country, Particulier postalCodeZip, Particulier.tel " +
+				"FROM Particulier " +
+				"WHERE Particulier.particulierID = " + paID;
+				
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet r2 = stmt.executeQuery(query);
+	
+		Particulier part = null;
+
+		while(r2.next()){
+			
+				String nom = r2.getString("nom");
+				String username = r2.getString("username");
+				String password = r2.getString("password");
+				String streetNumber = r2.getString("streetNumber");
+				String streetName = r2.getString("streetName");
+				String city = r2.getString("city");
+				String provState = r2.getString("provState");
+				String country = r2.getString("country");
+				String postalCodeZip = r2.getString("postalCodeZip");
+				String tel = r2.getString("tel");
+
+				part = new Particulier(paID, nom, "", username, password, 
+						 streetNumber,  streetName,  city,  provState,  country, 
+						 postalCodeZip,  tel);
+		}
+
+		return part;
+	}
+	
+	
 	public static EntiteMobile getEntiteMobileDetails(Connection conn, EntiteMobile em) throws SQLException{
 		int entiteID = em.getEntiteID();
 		String query = "SELECT EntiteMobile.entiteID, EntiteMobile.nom, EntiteMobile.capteurID, " +

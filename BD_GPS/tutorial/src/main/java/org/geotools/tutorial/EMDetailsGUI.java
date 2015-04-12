@@ -91,10 +91,13 @@ public class EMDetailsGUI extends JFrame implements ActionListener {
 		 */		
 		JLabel entiteIDLabel = new JLabel("EntiteID:");
 		entiteIDTF = new JLabel(Integer.toString(em.getEntiteID()));
+		
 		JLabel nomLabel = new JLabel("Nom:");
 		nomTF = new JTextField(em.getNom());
+		
 		JLabel capteurIDLabel = new JLabel("capteurID:");
 		capteurIDCB = new JComboBox(capteurIDs.toArray());
+		
 		//set current capteurID
 		int index = 0;
 		for(int i=0; i<capteurIDs.size(); i++){
@@ -112,8 +115,10 @@ public class EMDetailsGUI extends JFrame implements ActionListener {
 
 		PanEMDetails.add(entiteIDLabel);
 		PanEMDetails.add(entiteIDTF);
+		
 		PanEMDetails.add(nomLabel);
 		PanEMDetails.add(nomTF);
+		
 		PanEMDetails.add(capteurIDLabel);
 		PanEMDetails.add(capteurIDCB);
 
@@ -127,8 +132,10 @@ public class EMDetailsGUI extends JFrame implements ActionListener {
 			Vivant v = (Vivant) em;
 			JLabel vivantDateNaissanceLabel= new JLabel("Date Naissance:");
 			vivantDateNaissanceTF = new JTextField(v.getDateNaissanceString());
+			
 			JLabel vivantDateDecesLabel = new JLabel("Date Deces:");
 			vivantDateDecesTF = new JTextField(v.getDateDecesString());
+			
 			JLabel vivantEspeceLabel = new JLabel("Espece:");
 			vivantEspeceTF = new JTextField(v.getEspece());
 
@@ -201,27 +208,37 @@ public class EMDetailsGUI extends JFrame implements ActionListener {
 			Artificiel a = (Artificiel) em;
 			JLabel artificielMarqueLabel= new JLabel("Marque:");
 			artificielMarqueTF = new JTextField(a.getMarque());
+			
 			JLabel artificielModeleLabel= new JLabel("Modele:");
 			artificielModeleTF = new JTextField(a.getModele());
+			
 			JLabel artificielAnneeFabricationLabel = new JLabel("Annee Fabrication:");
 			artificielAnneeFabricationTF = new JTextField(Integer.toString(a.getAnneeFabrication()));
+			
 			JLabel artificielPuissanceLabel = new JLabel("Puissance:");
 			artificielPuissanceTF = new JTextField(a.getPuissance());
+			
 			JLabel artificielCombustibleLabel = new JLabel("Combustible:");
 			artificielCombustibleTF = new JTextField(a.getCombustible());
+			
 			JLabel artificielTypeMachineLabel = new JLabel("Type of Machine:");
 			artificielTypeMachineTF = new JTextField(a.getTypeMachine());
 
 			PanEMDetails.add(artificielMarqueLabel);
 			PanEMDetails.add(artificielMarqueTF);
+			
 			PanEMDetails.add(artificielModeleLabel);
 			PanEMDetails.add(artificielModeleTF);
+			
 			PanEMDetails.add(artificielAnneeFabricationLabel);
 			PanEMDetails.add(artificielAnneeFabricationTF);
+			
 			PanEMDetails.add(artificielPuissanceLabel);
 			PanEMDetails.add(artificielPuissanceTF);
+			
 			PanEMDetails.add(artificielCombustibleLabel);
 			PanEMDetails.add(artificielCombustibleTF);
+			
 			PanEMDetails.add(artificielTypeMachineLabel);
 			PanEMDetails.add(artificielTypeMachineTF);
 
@@ -262,10 +279,6 @@ public class EMDetailsGUI extends JFrame implements ActionListener {
 		else{
 			PanBottomButtons.add(btnClose);
 		}
-
-
-
-
 
 
 

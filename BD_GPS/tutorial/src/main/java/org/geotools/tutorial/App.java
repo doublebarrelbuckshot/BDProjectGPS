@@ -146,9 +146,7 @@ public class App implements ActionListener{
             }
         });
 
-		//Test the username login query
-//		Map<String, PasswordWrapper> userPassID; 
-//		userPassID = PresetQueries.getUsernamesPasswords(conn);
+        
 	}
 	
 	//Connection code

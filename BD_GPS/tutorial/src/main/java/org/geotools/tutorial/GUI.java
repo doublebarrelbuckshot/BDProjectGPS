@@ -31,15 +31,17 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 	private int capteurIWantToMap = 101;
 	private Boolean programChanged = false;
 	private static String viewType;
+	private static int ID;
 
 
 
 	private ArrayList<EntiteMobile> entiteMobile;
 	private ArrayList<Capteur_GPS> capteurGPS;
+	private ArrayList<Particulier> particulier;
 
 
 	private final JList<String> listCapteurs;
-	private final JList<String> listParticuliers;
+	private JList<String> listParticuliers;
 	private JList<String> listEntiteMobiles;
 
 
@@ -71,7 +73,7 @@ public void  refreshGUIFromEM(){
 		//
 
 		try {
-			entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, 1);
+			entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, ID);
 			updateEntiteMobileList();
 		} 
 		catch (Exception e1) {
@@ -134,6 +136,7 @@ public void  refreshGUIFromEM(){
 		super(s);
 
 		GUI.viewType = viewType;
+		GUI.ID = ID;
 
 		/*
 		 * ************************************************************
@@ -150,7 +153,7 @@ public void  refreshGUIFromEM(){
 		 * ************************************************************
 		 */
 		PresetQueries.getAllCapteur_GPS(conn);
-
+		
 		PresetQueries.getAllParticulier(conn);
 
 
@@ -475,6 +478,7 @@ public void  refreshGUIFromEM(){
 		}
 		//IF CLICK ENTITEMOBILE-DETAILS
 		else if(action.equals("btnEMDetails")){
+			
 			int selectedEMIndex = listEntiteMobiles.getSelectedIndex();
 			EntiteMobile selectedEM = null;  
 			if(selectedEMIndex == -1){
@@ -619,10 +623,66 @@ public void  refreshGUIFromEM(){
 		//		}
 
 		else if(action.equals("btnPADetails")){
-			JOptionPane.showMessageDialog(this, "This button (Details) doesn't do anything yet");
+			JOptionPane.showMessageDialog(this, "This button (Details) is disabled because of a bug with the oracle driver");
+			
+			/*
+			int selectedPAIndex = listParticuliers.getSelectedIndex();
+			Particulier selectedPA = null;  
+			if(selectedPAIndex == -1){
+				JOptionPane.showMessageDialog(this, "Choose a particulier that you would like to view in detail!");
+				return;
+			}
+			else{
+				selectedPA = Particulier.listParticulier.get(selectedPAIndex);
+				Boolean editableFlag = false;
+				try {
+					//Get more details depending on if it's Vivant, Artificiel, or just EntiteMobile
+					selectedPA = PresetQueries.getParticulierDetails(conn, selectedPAIndex);
+					
+				} 
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+				try {
+					PADetailsGUI newDetails = new PADetailsGUI("Details: " + selectedPA.getNom(), selectedPA, editableFlag, conn, this);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			} */
 		}
 		else if(action.equals("btnPAEdit")){
-			JOptionPane.showMessageDialog(this, "This button (Edit) doesn't do anything yet");
+			
+			JOptionPane.showMessageDialog(this, "This button (Edit) is disabled because of a bug with the oracle driver");
+			
+			/*
+			int selectedPAIndex = listParticuliers.getSelectedIndex();
+			Particulier selectedPA = null;  
+			if(selectedPAIndex == -1){
+				JOptionPane.showMessageDialog(this, "Choose a particulier that you would like to view in detail!");
+				return;
+			}
+			else{
+				selectedPA = Particulier.listParticulier.get(selectedPAIndex);
+				Boolean editableFlag = true;
+				try {
+					//Get more details depending on if it's Vivant, Artificiel, or just EntiteMobile
+					selectedPA = PresetQueries.getParticulierDetails(conn, selectedPAIndex);
+					
+				} 
+				catch (SQLException e) {
+					e.printStackTrace();
+				}
+
+				try {
+					PADetailsGUI newDetails = new PADetailsGUI("Details: " + selectedPA.getNom(), selectedPA, editableFlag, conn, this);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			*/
 		}
 		else if(action.equals("btnPANew")){
 			JOptionPane.showMessageDialog(this, "This button (New) doesn't do anything yet");
