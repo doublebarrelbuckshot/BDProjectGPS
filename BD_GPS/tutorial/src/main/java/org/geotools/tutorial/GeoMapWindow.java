@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
 
 import javax.swing.JFrame;
 
@@ -38,6 +40,7 @@ public class GeoMapWindow {
 	public static void showGeoMapWindow(Connection conn, int capteurID) throws SQLException, IOException{
 		ArrayList<GPS_Point> pointsForCapteur = PresetQueries.getGPSPointsForCapteurID(conn, capteurID);
 		
+		
 		File file = new File("Maps//ne_50m_admin_0_sovereignty.shp");
 
 		FileDataStore store = FileDataStoreFinder.getDataStore(file);
@@ -56,11 +59,42 @@ public class GeoMapWindow {
 		final SimpleFeatureBuilder BLDR = new SimpleFeatureBuilder(TYPE); 
 
 		ArrayList<SimpleFeature> features= new ArrayList<SimpleFeature>();
+//		Capteur_GPS actualCapteur = null;
+//		for(int i =0; i<Capteur_GPS.listCapteurGPS.size(); i++){
+//			if(capteurID == Capteur_GPS.listCapteurGPS.get(i).getCaptID()){
+//				actualCapteur = Capteur_GPS.listCapteurGPS.get(i);
+//				break;
+//			}
+//		}
+//)
+		Hashtable<String, InfosScientifiqueVivant> vivants = PresetQueries.getInfosScientifiqueVivantOfPoint(conn, capteurID);
+		Hashtable<String, InfosScientifique> infosSci = PresetQueries.getInfosScientifiqueOfPoint(conn, capteurID);
 
 		for(int i = 0; i<pointsForCapteur.size(); i++){
 			Coordinate pos = new Coordinate(pointsForCapteur.get(i).getLatitude(), pointsForCapteur.get(i).getLongitude());
-			features.add(createFeature(BLDR, pos, pointsForCapteur.get(i).getCapteurID(), pointsForCapteur.get(i).getSampleDate().toString()));
+			
+			//InfosScientifique is = PresetQueries.getInfosScientifiqueOfPoint(conn, pointsForCapteur.get(i));
+
+			String isInfo = "N/A";
+			
+			String isvInfo = "N/A";
+			InfosScientifique is = infosSci.get(pointsForCapteur.get(i).getSampleDateString());
+			if(is!=null)
+				isInfo = is.toString();
+			
+			InfosScientifiqueVivant isv = vivants.get(pointsForCapteur.get(i).getSampleDateString());
+			if(isv!=null)
+				isvInfo = isv.toString();
+			
+
+			
+			features.add(createFeature(BLDR, pos, pointsForCapteur.get(i).getCapteurID(), pointsForCapteur.get(i).getSampleDate().toString(), isInfo, isvInfo));
+		
+		
 		}
+		
+
+
 		
 		
 		Style style2 = SLD.createPointStyle("circle", Color.RED, 
@@ -93,11 +127,13 @@ public class GeoMapWindow {
 		
 	}
 	
-	private static  SimpleFeature createFeature(SimpleFeatureBuilder bldr, Coordinate pos, int id, String time) { 
+	private static  SimpleFeature createFeature(SimpleFeatureBuilder bldr, Coordinate pos, int id, String time, String isInfo, String isvInfo) { 
 		com.vividsolutions.jts.geom.Point p = GEOMFAC.createPoint(pos); 
 		bldr.add(p); 
 		bldr.add(id); 
 		bldr.add(time);
+		bldr.add(isInfo);
+		bldr.add(isvInfo);
 
 		// null arg means allow the builder to generate a default feature ID 
 		return bldr.buildFeature(null); 
@@ -108,6 +144,9 @@ public class GeoMapWindow {
 		typeBldr.add("pos", Point.class, DefaultGeographicCRS.WGS84); 
 		typeBldr.add("id", Integer.class); 
 		typeBldr.add("time", String.class);
+		typeBldr.add("Infos Scientifique", String.class);
+		typeBldr.add("Infos Scientifique Vivant", String.class);
+
 		return typeBldr.buildFeatureType(); 
 	} 
 	

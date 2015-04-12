@@ -7,6 +7,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
@@ -14,6 +15,77 @@ import javax.swing.JTextField;
 
 public class PresetQueries {
 
+	
+	public static Hashtable<String, InfosScientifiqueVivant> getInfosScientifiqueVivantOfPoint(Connection conn, int capteurID) throws SQLException{
+		
+		String query = "SELECT Infos_Scientifique_Vivant.capteurID, Infos_Scientifique_Vivant.sampleDate, latitude, longitude, pouls, pressionArterielle, pourcentageGras, temperatureCorps, DB_GPS.latitude, DB_GPS.longitude "+
+				"FROM Infos_Scientifique_Vivant, DB_GPS " +
+				"where " +
+				"Infos_Scientifique_Vivant.capteurID = DB_GPS.capteurID AND Infos_Scientifique_Vivant.sampleDate = DB_GPS.sampleDate AND " + 
+				"DB_GPS.capteurID = " + capteurID ;//+ " AND " +
+				//"sampleDate = " +
+				//"to_date(\'" + gpsp.getSampleDateString() + "\', \'DD/MM/YYYY HH24/MI/SS\')";
+		
+		
+		System.out.println(query);
+
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		Hashtable<String, InfosScientifiqueVivant> vivants = new Hashtable<String, InfosScientifiqueVivant>();
+		while(rs.next()){
+			int captID = rs.getInt("capteurID");
+			Date sampleDate = rs.getTimestamp("sampleDate");
+			double latitude = rs.getDouble("latitude");
+			double longitude = rs.getDouble("longitude");
+			int pouls = rs.getInt("pouls");
+			int pressionArterielle = rs.getInt("pressionArterielle");
+			Double pourcentageGras = rs.getDouble("pourcentageGras");
+			int temperatureCorps = rs.getInt("temperatureCorps");
+
+			InfosScientifiqueVivant isv = new InfosScientifiqueVivant(captID, sampleDate, latitude, longitude,
+					pouls, pressionArterielle, pourcentageGras,temperatureCorps );
+			vivants.put(GPS_Point.getSampleDateFromDate(sampleDate), isv);
+		}
+		return vivants;
+	}
+	
+	
+	
+	public static Hashtable<String, InfosScientifique> getInfosScientifiqueOfPoint(Connection conn, int capteurID) throws SQLException{
+		
+		String query = "SELECT Infos_Scientifique.capteurID, Infos_Scientifique.sampleDate, latitude, longitude, temperatureEnv, vent, directionVent, pressionAtm, "+ 
+				"houle, altitude, vitesse FROM Infos_Scientifique, DB_GPS " +
+				"where " +
+				"Infos_Scientifique.capteurID = DB_GPS.capteurID AND Infos_Scientifique.sampleDate = DB_GPS.sampleDate AND " + 
+				"DB_GPS.capteurID = " + capteurID ;
+		
+		
+		System.out.println(query);
+
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		Hashtable<String, InfosScientifique> vivants = new Hashtable<String, InfosScientifique>();
+
+		
+		while(rs.next()){
+			int captID = rs.getInt("capteurID");
+			Date sampleDate = rs.getTimestamp("sampleDate");
+			double latitude = rs.getDouble("latitude");
+			double longitude = rs.getDouble("longitude");
+			int temperatureEnv = rs.getInt("temperatureEnv");
+			int vent = rs.getInt("vent");
+			String directionVent = rs.getString("directionVent");
+			int pressionAtm = rs.getInt("pressionAtm");
+			int houle = rs.getInt("houle");
+			int altitude = rs.getInt("altitude");
+			int vitesse = rs.getInt("vitesse");
+
+			InfosScientifique is = new InfosScientifique(captID, sampleDate, latitude, longitude, temperatureEnv, 
+					vent, directionVent, pressionAtm, houle, altitude, vitesse);
+			vivants.put(GPS_Point.getSampleDateFromDate(sampleDate), is);
+		}
+		return vivants;
+	}
 	public static void deleteEM(Connection conn, EntiteMobile em) throws SQLException {
 
 		String query = "DELETE FROM ENTITEMOBILE WHERE ENTITEID = " + em.getEntiteID();

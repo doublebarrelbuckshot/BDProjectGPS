@@ -26,6 +26,18 @@ public class GPS_Point {
 		}
 		
 		
+		public String getSampleDateString(){
+			if (this.sampleDate == null)
+				return "";
+			return new SimpleDateFormat("dd/MM/yyyy HH/mm/ss").format(this.sampleDate);
+		}
+		
+		public static String getSampleDateFromDate(Date d){
+			if (d == null)
+				return "";
+			return new SimpleDateFormat("dd/MM/yyyy HH/mm/ss").format(d);
+		}
+		
 		
 		public int getCapteurID() {
 			return capteurID;
