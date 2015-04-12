@@ -13,7 +13,7 @@ REMAINING TASKS:
     - No Edit                 Done
     - No particulars list     Done
     
-  - Administrator view
+  - Administrator view   <-- Philippe travaille la dessus
     - New particulier
     - Edit particulier
     - Details particulier
