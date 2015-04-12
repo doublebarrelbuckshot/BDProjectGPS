@@ -25,6 +25,8 @@ public class Particulier {
 	
 	public Particulier(){}
 	
+
+	
 	public Particulier(int particulierID, String nom, String type, String username, String password, 
 			String streetNumber, String streetName, String city, String provState, String country, 
 			String postalCodeZip, String tel){

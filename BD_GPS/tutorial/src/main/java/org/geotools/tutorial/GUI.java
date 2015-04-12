@@ -49,6 +49,23 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 	private final DefaultListModel<String> particuliersDefaultModel = new DefaultListModel<>();
 	private DefaultListModel<String>entiteMobilesDefaultModel = new DefaultListModel<>();
 
+	
+	
+	public void refreshGUIFromParticulier(){
+		
+		
+		try {
+			PresetQueries.getAllParticulier(conn);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		particuliersDefaultModel.clear();
+
+		Particulier.listParticulier.stream().forEach((item) -> {
+			particuliersDefaultModel.addElement(item.printListString());
+		});
+	}
 public void  refreshGUIFromCGPS(){
 		try {
 			PresetQueries.getAllCapteur_GPS(conn);
@@ -623,9 +640,9 @@ public void  refreshGUIFromEM(){
 		//		}
 
 		else if(action.equals("btnPADetails")){
-			JOptionPane.showMessageDialog(this, "This button (Details) is disabled because of a bug with the oracle driver");
+			//JOptionPane.showMessageDialog(this, "This button (Details) is disabled because of a bug with the oracle driver");
 			
-			/*
+			
 			int selectedPAIndex = listParticuliers.getSelectedIndex();
 			Particulier selectedPA = null;  
 			if(selectedPAIndex == -1){
@@ -633,11 +650,14 @@ public void  refreshGUIFromEM(){
 				return;
 			}
 			else{
+				
 				selectedPA = Particulier.listParticulier.get(selectedPAIndex);
+				//System.out.println("SELECTED PA" + Particulier.listParticulier.get(selectedPAIndex));
+						
 				Boolean editableFlag = false;
 				try {
 					//Get more details depending on if it's Vivant, Artificiel, or just EntiteMobile
-					selectedPA = PresetQueries.getParticulierDetails(conn, selectedPAIndex);
+					selectedPA = PresetQueries.getParticulierDetails(conn, selectedPA.getParticulierID());
 					
 				} 
 				catch (SQLException e) {
@@ -650,13 +670,13 @@ public void  refreshGUIFromEM(){
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-			} */
+			} 
 		}
 		else if(action.equals("btnPAEdit")){
 			
-			JOptionPane.showMessageDialog(this, "This button (Edit) is disabled because of a bug with the oracle driver");
+			//JOptionPane.showMessageDialog(this, "This button (Edit) is disabled because of a bug with the oracle driver");
 			
-			/*
+			
 			int selectedPAIndex = listParticuliers.getSelectedIndex();
 			Particulier selectedPA = null;  
 			if(selectedPAIndex == -1){
@@ -668,7 +688,7 @@ public void  refreshGUIFromEM(){
 				Boolean editableFlag = true;
 				try {
 					//Get more details depending on if it's Vivant, Artificiel, or just EntiteMobile
-					selectedPA = PresetQueries.getParticulierDetails(conn, selectedPAIndex);
+					selectedPA = PresetQueries.getParticulierDetails(conn, selectedPA.getParticulierID());
 					
 				} 
 				catch (SQLException e) {
@@ -682,7 +702,7 @@ public void  refreshGUIFromEM(){
 					e.printStackTrace();
 				}
 			}
-			*/
+			
 		}
 		else if(action.equals("btnPANew")){
 			JOptionPane.showMessageDialog(this, "This button (New) doesn't do anything yet");

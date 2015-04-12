@@ -264,12 +264,13 @@ public class PresetQueries {
 	}
 	
 	public static void updateParticulier(Connection conn, int particulierID,
-			String nom, String type, String username, String streetNumber, String streetName, String city, String provState, String country, String postalCodeZip, String tel) throws SQLException {
+			String nom, String type, String username, String password, String streetNumber, String streetName, String city, String provState, String country, String postalCodeZip, String tel) throws SQLException {
 
 		String query = "UPDATE Particulier SET " + 
 				"nom = " + "\'" + nom + "\', " +
 				"type = " + "\'" + type + "\', " +
 				"username = " + "\'" + username + "\', " +
+				"password = " + "\'" + password + "\', " +
 				"streetNumber = " + "\'" + streetNumber + "\', " +
 				"streetName = " + "\'" + streetName + "\', " +
 				"city = " + "\'" + city + "\', " +
@@ -280,7 +281,7 @@ public class PresetQueries {
 				"WHERE "+
 				"particulierID = "+ particulierID;
 
-		//System.out.println(query);
+		System.out.println(query);
 		Statement stmt = (Statement) conn.createStatement();
 		stmt.executeUpdate(query);
 
@@ -382,11 +383,11 @@ public class PresetQueries {
 
 	public static Particulier getParticulierDetails(Connection conn, int paID) throws SQLException{
 
-		String query = "SELECT Particulier.particulierID, Particulier.nom, Particulier.username, " +
-				"Particulier.streetNumber, Particulier.city, Particulier.provState, Particulier.country, Particulier postalCodeZip, Particulier.tel " +
+		String query = "SELECT Particulier.particulierID, Particulier.nom, Particulier.type, Particulier.username, Particulier.password, " +
+				"Particulier.streetNumber, Particulier.streetName, Particulier.city, Particulier.provState, Particulier.country, Particulier.postalCodeZip, Particulier.tel " +
 				"FROM Particulier " +
 				"WHERE Particulier.particulierID = " + paID;
-				
+				System.out.println(query);
 		Statement stmt = (Statement) conn.createStatement();
 		ResultSet r2 = stmt.executeQuery(query);
 	
@@ -395,6 +396,7 @@ public class PresetQueries {
 		while(r2.next()){
 			
 				String nom = r2.getString("nom");
+				String type = r2.getString("type");
 				String username = r2.getString("username");
 				String password = r2.getString("password");
 				String streetNumber = r2.getString("streetNumber");
@@ -405,11 +407,11 @@ public class PresetQueries {
 				String postalCodeZip = r2.getString("postalCodeZip");
 				String tel = r2.getString("tel");
 
-				part = new Particulier(paID, nom, "", username, password, 
+				part = new Particulier(paID, nom, type, username, password, 
 						 streetNumber,  streetName,  city,  provState,  country, 
 						 postalCodeZip,  tel);
+				
 		}
-
 		return part;
 	}
 	

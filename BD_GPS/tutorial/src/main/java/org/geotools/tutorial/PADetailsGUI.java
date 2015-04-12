@@ -28,12 +28,14 @@ import org.jdatepicker.impl.UtilDateModel;
 public class PADetailsGUI extends JFrame implements ActionListener {
 
 
-	
+
 	private JLabel particulierIDTF;
 	private JTextField nomTF;
 	private JTextField typeTF;
 	private JTextField usernameTF;
-	
+	private JTextField passwordTF;
+
+
 	private JTextField streetNumberTF;
 	private JTextField streetNameTF;
 	private JTextField cityTF;
@@ -56,9 +58,9 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 		//SET UP MAIN PANEL OF INFO
 
 		JPanel PanPADetails = new JPanel();
-		PanPADetails.setLayout(new GridLayout(11,2));
+		PanPADetails.setLayout(new GridLayout(12,2));
 
-		
+
 		/*
 		 * ************************************************************
 		 ********** 		Particulier properties	        ***********
@@ -66,43 +68,46 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 		 */		
 		JLabel particulierIDLabel = new JLabel("ParticulierID:");
 		particulierIDTF = new JLabel(Integer.toString(pa.getParticulierID()));
-		
+
 		JLabel nomLabel = new JLabel("Nom:");
 		nomTF = new JTextField(pa.getNom());
-		
+
 		JLabel typeLabel = new JLabel("Type:");
 		typeTF = new JTextField(pa.getType());
-		
+
 		JLabel usernameLabel = new JLabel("Username:");
 		usernameTF = new JTextField(pa.getUsername());
-		
+
+		JLabel passwordLabel = new JLabel("Password:");
+		passwordTF = new JTextField(pa.getPassword());
+
 		JLabel streetNumberLabel = new JLabel("Street Number:");
 		streetNumberTF = new JTextField(pa.getStreetNumber());
-		
+
 		JLabel streetNameLabel = new JLabel("Street Name:");
 		streetNameTF = new JTextField(pa.getStreetName());
-		
+
 		JLabel cityLabel = new JLabel("City:");
 		cityTF = new JTextField(pa.getCity());
-		
+
 		JLabel provStateLabel = new JLabel("Province/State:");
 		provStateTF = new JTextField(pa.getProvState());
-		
+
 		JLabel countryLabel = new JLabel("Country:");
 		countryTF = new JTextField(pa.getCountry());
-		
+
 		JLabel postalCodeZipLabel = new JLabel("PostalCode/Zip:");
 		postalCodeZipTF  = new JTextField(pa.getPostalCodeZip());;
-		
+
 		JLabel telLabel = new JLabel("Telephone:");
-		telTF = new JTextField(pa.getStreetName());;
-		
+		telTF = new JTextField(pa.getTel());;
+
 
 		if(!editableFlag){
 			nomTF.setEditable(false);
 			typeTF.setEditable(false);
 			usernameTF.setEditable(false);
-			
+			passwordTF.setEditable(false);
 			streetNumberTF.setEditable(false);
 			streetNameTF.setEditable(false);
 			cityTF.setEditable(false);
@@ -114,37 +119,40 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 
 		PanPADetails.add(particulierIDLabel);
 		PanPADetails.add(particulierIDTF);
-		
+
 		PanPADetails.add(nomLabel);
 		PanPADetails.add(nomTF);
-		
+
 		PanPADetails.add(typeLabel);
 		PanPADetails.add(typeTF);
-		
+
+		PanPADetails.add(passwordLabel);
+		PanPADetails.add(passwordTF);
+
 		PanPADetails.add(usernameLabel);
 		PanPADetails.add(usernameTF);
-		
+
 		PanPADetails.add(streetNumberLabel);
 		PanPADetails.add(streetNumberTF);
-		
+
 		PanPADetails.add(streetNameLabel);
 		PanPADetails.add(streetNameTF);
-		
+
 		PanPADetails.add(cityLabel);
 		PanPADetails.add(cityTF);
-		
+
 		PanPADetails.add(provStateLabel);
 		PanPADetails.add(provStateTF);
-		
+
 		PanPADetails.add(countryLabel);
 		PanPADetails.add(countryTF);
-		
+
 		PanPADetails.add(postalCodeZipLabel);
 		PanPADetails.add(postalCodeZipTF);
-		
+
 		PanPADetails.add(telLabel);
 		PanPADetails.add(telTF);
-		
+
 
 
 		/*
@@ -168,10 +176,10 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 		btnCancel.setActionCommand("btnCancel");
 
 		if(editableFlag){
-			
-			
+
+
 			PanBottomButtons.setLayout(new GridLayout(1,2));
-//			PanBottomButtons.add(btnSave);
+			PanBottomButtons.add(btnSave);
 			PanBottomButtons.add(btnCancel);
 		}
 
@@ -243,26 +251,38 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 		if(action.equals("btnSave")){
 
 			boolean updatedParticulier = true;
-			if(particulierIDTF.getText().equals("") ||  nomTF.getText().equals(""))
+			if(particulierIDTF.getText().equals("") ||  nomTF.getText().equals("") ||
+					streetNumberTF.getText().equals("") ||
+					streetNameTF.getText().equals("") ||
+					cityTF.getText().equals("") ||
+					provStateTF.getText().equals("") ||
+					countryTF.getText().equals("") ||
+					postalCodeZipTF.getText().equals("") ||
+					telTF.getText().equals(""))
 			{
 				JOptionPane.showMessageDialog(this, "MISSING VALUES FOR PARTICULIER");
 				updatedParticulier = false;
 			}
+
+
 			if(updatedParticulier){
 				try {
 					//UPDATE THE PARTICULIER IN THE DATABASE
 					PresetQueries.updateParticulier(conn, pa.getParticulierID(),
-							pa.getNom(), pa.getType(), pa.getUsername(), pa.getStreetNumber(), pa.getStreetName(), pa.getCity(), pa.getProvState(), pa.getCountry(), pa.getPostalCodeZip(), pa.getTel());
-					
+							nomTF.getText(), typeTF.getText(), usernameTF.getText(), passwordTF.getText(), 
+							streetNumberTF.getText(), streetNameTF.getText(), cityTF.getText(), provStateTF.getText(), 
+							countryTF.getText(), postalCodeZipTF.getText(), telTF.getText());
+
 				}  catch (NumberFormatException  | SQLException e) {
 					JOptionPane.showMessageDialog(this, e.getMessage());
+					e.printStackTrace();
 					updatedParticulier = false;
 
 				}
 			}
-			
+
 			if(updatedParticulier){
-//				gui.refreshGUIFromEM();
+				gui.refreshGUIFromParticulier();
 				this.dispose();
 			}
 
