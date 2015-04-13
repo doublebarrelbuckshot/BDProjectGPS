@@ -1,6 +1,7 @@
 package org.geotools.tutorial;
 
 import java.awt.BorderLayout;
+import java.awt.Component;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -48,13 +49,42 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 
 	private Particulier pa;
 	private GUI gui;
+	private boolean makeNewPA = false;
+	
 
+	
 	public PADetailsGUI(String s, Particulier em, Boolean editableFlag, Connection conn, GUI gui) throws SQLException{
 		super(s);
 
+		
 		this.conn = conn;
 		this.pa = em;
 		this.gui = gui;
+		
+		//If we are calling this gui with no particulier, we make a blank one
+		if(em == null){
+			int particulierID = 0;
+			String nom = "";
+			String type = "";
+			String username = "";
+			String password = "";
+			String streetNumber = "";
+			String streetName = "";
+			String city = "";
+			String provState = "";
+			String country = "";
+			String postalCodeZip = "";
+			String tel = "";
+			
+			Particulier particulier = new Particulier(PresetQueries.getNextParticulierID(conn),  nom,  type,  username,  password, 
+					 streetNumber,  streetName,  city,  provState,  country, 
+					 postalCodeZip,  tel);
+			
+			this.pa = particulier;
+			makeNewPA = true;
+			
+		}
+
 		//SET UP MAIN PANEL OF INFO
 
 		JPanel PanPADetails = new JPanel();
@@ -126,11 +156,11 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 		PanPADetails.add(typeLabel);
 		PanPADetails.add(typeTF);
 
-		PanPADetails.add(passwordLabel);
-		PanPADetails.add(passwordTF);
-
 		PanPADetails.add(usernameLabel);
 		PanPADetails.add(usernameTF);
+		
+		PanPADetails.add(passwordLabel);
+		PanPADetails.add(passwordTF);
 
 		PanPADetails.add(streetNumberLabel);
 		PanPADetails.add(streetNumberTF);
@@ -174,13 +204,22 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 		JButton btnCancel = new JButton("Cancel");
 		btnCancel.addActionListener(this);
 		btnCancel.setActionCommand("btnCancel");
+		
+		JButton btnDelete = new JButton("Delete");
+		btnDelete.addActionListener(this);
+		btnDelete.setActionCommand("btnDelete");
 
 		if(editableFlag){
 
 
-			PanBottomButtons.setLayout(new GridLayout(1,2));
+			PanBottomButtons.setLayout(new GridLayout(1,3));
 			PanBottomButtons.add(btnSave);
+			if(!makeNewPA){
+				PanBottomButtons.add(btnDelete);	
+			}
 			PanBottomButtons.add(btnCancel);
+
+			
 		}
 
 		else{
@@ -206,7 +245,7 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 
 
 	}
-
+	
 
 	public static boolean isValidInt(String inInt){
 		int i;
@@ -247,6 +286,23 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 		if(action.equals("btnCancel") || action.equals("btnClose")){
 			this.dispose();
 		}
+		
+		if(action.equals("btnDelete")){
+			
+		boolean updatedParticulier = false;
+			try {
+				 
+				PresetQueries.deleteParticulier(conn, particulierIDTF.getText());
+				gui.refreshGUIFromParticulier();
+				this.dispose();
+				updatedParticulier = true;
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				updatedParticulier = false;
+			}
+		}
 
 		if(action.equals("btnSave")){
 
@@ -268,10 +324,20 @@ public class PADetailsGUI extends JFrame implements ActionListener {
 			if(updatedParticulier){
 				try {
 					//UPDATE THE PARTICULIER IN THE DATABASE
-					PresetQueries.updateParticulier(conn, pa.getParticulierID(),
+					if(!makeNewPA){
+							PresetQueries.updateParticulier(conn, pa.getParticulierID(),
 							nomTF.getText(), typeTF.getText(), usernameTF.getText(), passwordTF.getText(), 
 							streetNumberTF.getText(), streetNameTF.getText(), cityTF.getText(), provStateTF.getText(), 
 							countryTF.getText(), postalCodeZipTF.getText(), telTF.getText());
+							
+					} else if(makeNewPA){
+						
+						PresetQueries.createParticulier(conn, pa.getParticulierID(),
+								nomTF.getText(), typeTF.getText(), usernameTF.getText(), passwordTF.getText(), 
+								streetNumberTF.getText(), streetNameTF.getText(), cityTF.getText(), provStateTF.getText(), 
+								countryTF.getText(), postalCodeZipTF.getText(), telTF.getText());
+					}
+
 
 				}  catch (NumberFormatException  | SQLException e) {
 					JOptionPane.showMessageDialog(this, e.getMessage());

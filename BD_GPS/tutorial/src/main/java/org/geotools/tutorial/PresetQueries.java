@@ -286,6 +286,39 @@ public class PresetQueries {
 		stmt.executeUpdate(query);
 
 	}
+	
+	public static void createParticulier(Connection conn, int particulierID,
+			String nom, String type, String username, String password, String streetNumber, String streetName, String city, String provState, String country, String postalCodeZip, String tel) throws SQLException {
+
+		String query = "Insert into Particulier values (" +
+				particulierID + ", " +
+				"\'" + nom + "\', " +
+				"\'" + type + "\', " +
+				"\'" + username + "\', " +
+				"\'" + password + "\', " +
+				"\'" + streetNumber + "\', " +
+				"\'" + streetName + "\', " +
+				"\'" + city + "\', " +
+				"\'" + provState + "\', " +
+				"\'" + country + "\', " +
+				"\'" + postalCodeZip + "\', " +
+				"\'" + tel + "\')";
+
+		System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeUpdate(query);
+
+	}
+	
+	public static void deleteParticulier(Connection conn, String particulierID) throws SQLException {
+
+		String query = "DELETE FROM Particulier WHERE particulierID = "+particulierID;
+
+		System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeUpdate(query);
+
+	}
 
 	public static void updateVivant(Connection conn, int entiteID, Date dateNaissance, Date dateDeces, String espece) throws SQLException{
 		String decesOption = "";
@@ -372,7 +405,7 @@ public class PresetQueries {
 			Date dateDebut = rs.getDate("dateDebut");
 			Date dateFin = rs.getDate("dateFin");
 			gps = new Capteur_GPS(captID, model, fabricant, precisionGPS, dateDebut, dateFin);
-
+ 
 		}
 
 		return gps;
@@ -413,6 +446,23 @@ public class PresetQueries {
 				
 		}
 		return part;
+	}
+	
+	public static int getNextParticulierID(Connection conn) throws SQLException{
+		
+		
+		int nextID = -1;
+		String query = "SELECT particulierID FROM Particulier";
+				System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet r2 = stmt.executeQuery(query);
+
+		while(r2.next()){
+			
+			int id = r2.getInt("particulierID");
+			nextID = id;
+		}
+		return (nextID + 1);
 	}
 	
 	

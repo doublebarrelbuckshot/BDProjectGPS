@@ -44,7 +44,7 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 	private JList<String> listParticuliers;
 	private JList<String> listEntiteMobiles;
 
-
+	private final DefaultListModel<String> emptyModel = new DefaultListModel<>();
 	private final DefaultListModel<String> capteursDefaultModel = new DefaultListModel<>();
 	private final DefaultListModel<String> particuliersDefaultModel = new DefaultListModel<>();
 	private DefaultListModel<String>entiteMobilesDefaultModel = new DefaultListModel<>();
@@ -53,6 +53,10 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 	
 	public void refreshGUIFromParticulier(){
 		
+		System.out.println("FRAY AYAYAYAY");
+		particuliersDefaultModel.removeAllElements();
+		Particulier.listParticulier.clear();
+
 		
 		try {
 			PresetQueries.getAllParticulier(conn);
@@ -60,11 +64,16 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		particuliersDefaultModel.clear();
+
 
 		Particulier.listParticulier.stream().forEach((item) -> {
 			particuliersDefaultModel.addElement(item.printListString());
 		});
+		
+		listParticuliers.setModel(particuliersDefaultModel);
+		listParticuliers.repaint();
+		
+
 	}
 public void  refreshGUIFromCGPS(){
 		try {
@@ -705,7 +714,19 @@ public void  refreshGUIFromEM(){
 			
 		}
 		else if(action.equals("btnPANew")){
-			JOptionPane.showMessageDialog(this, "This button (New) doesn't do anything yet");
+
+			
+				Boolean editableFlag = true;
+
+				try {
+					//The null indicates to the gui to make a blank constructor
+					PADetailsGUI newDetails = new PADetailsGUI("Details: New Particulier", null, editableFlag, conn, this);
+					
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			
 		}
 
 	}
