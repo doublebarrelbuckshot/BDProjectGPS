@@ -234,7 +234,7 @@ function DPGPS(){
     	        result += lat + ", " +  long+ ");\n";
     	        console.log(result);
     	        
-    	        if(isArtifciel){
+    	        if(isArtifciel || isVivant){
     	            var artificiel = "Insert into Infos_Scientifique values(";
     
     	        artificiel += entiteID;
