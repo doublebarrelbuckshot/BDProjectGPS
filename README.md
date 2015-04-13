@@ -13,11 +13,11 @@ REMAINING TASKS:
     - No Edit                 Done
     - No particulars list     Done
     
-  - Administrator view   <-- Philippe travaille la dessus
-    - New particulier
-    - Edit particulier
-    - Details particulier
-    - add/Modify adoption
+  - Administrator view   
+    - New particulier         Done
+    - Edit particulier        Done
+    - Details particulier     Done
+    - add/Modify adoption     ...
     
   - GPS device tracking tab
     - New device
