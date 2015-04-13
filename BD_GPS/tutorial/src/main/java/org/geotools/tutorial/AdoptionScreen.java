@@ -13,6 +13,7 @@ import javax.swing.ButtonGroup;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -64,9 +65,12 @@ public class AdoptionScreen extends JFrame implements ListSelectionListener, Act
 		
 		
 		
-		
+		JPanel panelRadioAndButtons = new JPanel();
 		JPanel PanBottomButtons = new JPanel();
+		JPanel panRadioButtons = new JPanel();
 		
+		JLabel scienceLabel = new JLabel("Science: ");
+		JLabel ludiqueLabel = new JLabel("Ludique: ");
 		//		BUTTONS
 		JButton btnAdopt = new JButton("Adopt");
 		btnAdopt.addActionListener(this);
@@ -85,6 +89,8 @@ public class AdoptionScreen extends JFrame implements ListSelectionListener, Act
 		PanBottomButtons.add(btnAdopt);
 		PanBottomButtons.add(btnUnAdopt);
 		PanBottomButtons.add(btnCancel);
+		
+
 	
 		
 		
@@ -102,6 +108,14 @@ public class AdoptionScreen extends JFrame implements ListSelectionListener, Act
 		checkScience.addActionListener(this);
 		checkLudique.addActionListener(this);
 		
+		panRadioButtons.add(scienceLabel);
+		panRadioButtons.add(checkScience);
+		
+		panRadioButtons.add(ludiqueLabel);
+		panRadioButtons.add(checkLudique);
+		
+		panelRadioAndButtons.add(panRadioButtons, BorderLayout.CENTER);
+		panelRadioAndButtons.add(PanBottomButtons, BorderLayout.SOUTH);
 		
 		
 		entiteMobilesDefaultModel.clear();
@@ -112,8 +126,8 @@ public class AdoptionScreen extends JFrame implements ListSelectionListener, Act
 		
 		listEntiteMobiles.repaint();
 	
-		this.add(entiteMobilesPanel, BorderLayout.CENTER);
-		this.add(PanBottomButtons, BorderLayout.SOUTH);
+		this.add(entiteMobilesPanel, BorderLayout.NORTH);
+		this.add(panelRadioAndButtons, BorderLayout.CENTER);
 		
 		
 		setSize(400, 700);
@@ -143,7 +157,6 @@ public class AdoptionScreen extends JFrame implements ListSelectionListener, Act
 
 			selectedEM =  entitees.get(selectedEMIndex);
 			System.out.println("The selected em is: "+selectedEM.getNom());
-			JOptionPane.showMessageDialog(this, "I heard you liked to adopt");
 			
 			try {
 				PresetQueries.adoptEntity(conn, leParticulier, selectedEM, typeOfInterest);
