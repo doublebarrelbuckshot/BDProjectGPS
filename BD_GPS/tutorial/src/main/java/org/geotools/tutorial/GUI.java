@@ -53,7 +53,6 @@ public class GUI extends JFrame implements ListSelectionListener, ActionListener
 	
 	public void refreshGUIFromParticulier(){
 		
-		System.out.println("FRAY AYAYAYAY");
 		particuliersDefaultModel.removeAllElements();
 		Particulier.listParticulier.clear();
 
@@ -250,7 +249,7 @@ public void  refreshGUIFromEM(){
 		 */
 
 		/*
-		 * SETUP FOR ENTITE MOBILE JLIST
+		 * SETUP FOR capteurs JLIST
 		 */
 		this.listCapteurs = new JList<>();
 		listCapteurs.setModel(capteursDefaultModel);
@@ -361,6 +360,14 @@ public void  refreshGUIFromEM(){
 		panPAButtons.add(btnPANew);
 		btnPANew.addActionListener(this);
 		btnPANew.setActionCommand("btnPANew");
+		
+		/*
+		 * Initialize NEW button
+		 */
+		JButton btnPAAdopt = new JButton("Adopt");
+		panPAButtons.add(btnPAAdopt);
+		btnPAAdopt.addActionListener(this);
+		btnPAAdopt.setActionCommand("btnPAAdopt");
 
 		/*
 		 * ADD ALL BUTTONS TO ENTITE MOBILE PANEL
@@ -406,6 +413,8 @@ public void  refreshGUIFromEM(){
 			panCGPSButtons.add(btnCGPSNew);
 			btnCGPSNew.addActionListener(this);
 			btnCGPSNew.setActionCommand("btnCGPSNew");
+			
+
 
 
 		}
@@ -711,7 +720,7 @@ public void  refreshGUIFromEM(){
 					e.printStackTrace();
 				}
 			}
-			
+			//btnPAAdopt
 		}
 		else if(action.equals("btnPANew")){
 
@@ -727,6 +736,19 @@ public void  refreshGUIFromEM(){
 					e.printStackTrace();
 				}
 			
+		} else if(action.equals("btnPAAdopt")) {
+			
+
+			int selectedPAIndex = listParticuliers.getSelectedIndex();
+				if(selectedPAIndex == -1){
+					JOptionPane.showMessageDialog(this, "Choose a particulier that you would like to adopt with.");
+					return;
+				}
+				
+				
+				Particulier selectedPA = Particulier.listParticulier.get(selectedPAIndex);  
+				
+				AdoptionScreen as = new AdoptionScreen("Adopt an entity, "+selectedPA.getNom()+".", conn, selectedPA);
 		}
 
 	}
@@ -795,9 +817,6 @@ public void  refreshGUIFromEM(){
 
 				if(GUI.viewType == "user"){
 
-					// GET USER NAME, AND SET THE SELECTED PARTICULIER TO THAT USER.
-					// THERE IS CURRENTLY NO LOGIN FRAME, SO THIS IF WILL ASSUME UNIVERSITE DE MONTREAL
-					//
 
 					try {
 						entiteMobile = PresetQueries.getEntiteMobileForParticulier(conn, 1);
