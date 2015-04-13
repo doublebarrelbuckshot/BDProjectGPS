@@ -556,7 +556,29 @@ public class PresetQueries {
 	}
 
 
+	public static ArrayList<EntiteMobile> getAllEntiteMobile(Connection conn) throws SQLException{
+		ArrayList<EntiteMobile> result = new ArrayList<EntiteMobile>();
+		String query = "SELECT * FROM EntiteMobile";
 
+
+		Statement stmt = (Statement) conn.createStatement();
+		ResultSet rs = stmt.executeQuery(query);
+		while(rs.next()){
+
+			int entiteID = rs.getInt("entiteID");
+			String nom = rs.getString("nom");
+			int capteurID = rs.getInt("capteurID");
+
+			EntiteMobile em = new EntiteMobile(entiteID, nom, capteurID);
+			result.add(em);	
+		}
+
+		for (EntiteMobile x : result){
+			System.out.println(x);
+		}
+
+		return result;
+	}
 	public static ArrayList<EntiteMobile> getEntiteMobileForParticulier(Connection conn, int particulierID) throws SQLException{
 		ArrayList<EntiteMobile> result = new ArrayList<EntiteMobile>();
 		String query = "SELECT EntiteMobile.entiteID, EntiteMobile.nom, EntiteMobile.capteurID " +
@@ -673,6 +695,37 @@ public class PresetQueries {
 		
 		return usernamePasswordsMap;
 		
+	}
+	
+	public static void adoptEntity(Connection conn, Particulier pa, EntiteMobile en, String interet) throws SQLException{
+		
+		System.out.println("Particulier "+pa.getNom() +" is adopting Entity " + en.getNom() + ".");
+		//
+
+		String query = "Insert into Adopte values ("
+				+ en.getEntiteID()+", "
+				+ pa.getParticulierID()+", "
+				+ "300" + ", "							//Dates... It had to be dates...
+				+ "to_date('09/03/2011 02/07/09', 'DD/MM/YYYY HH24/MI/SS') , to_date('07/03/2013 02/07/09', 'DD/MM/YYYY HH24/MI/SS'), "
+				+ "\'" +interet+"\')";	
+		
+		System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeQuery(query);
+
+	}
+	
+	public static void unAdoptEntity(Connection conn, Particulier pa, EntiteMobile en, String interet) throws SQLException{
+		
+		System.out.println("Particulier "+pa.getNom() +" is un-adopting Entity " + en.getNom() + ".");
+		
+
+		String query = "DELETE FROM Adopte WHERE entiteID = "+en.getEntiteID()+" AND particulierID = "+pa.getParticulierID() ;
+		
+		System.out.println(query);
+		Statement stmt = (Statement) conn.createStatement();
+		stmt.executeQuery(query);
+
 	}
 
 
