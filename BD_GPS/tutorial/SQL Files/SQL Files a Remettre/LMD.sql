@@ -10891,7 +10891,7 @@ update Capteur_GPS set dateDebut = to_date('15/01/2015 21/30/17', 'DD/MM/YYYY HH
 
 
 
--- 1. Selectionner tous les particuliers qui detiennent des entit�s mobiles qui sont d�ja d�c�d�es
+-- 1. Selectionner tous les particuliers qui detiennent des entites mobiles qui sont deja decedees
 select Particulier.nom, entiteMobile.nom, Vivant.dateDeces, capteur_GPS.modele
 	from Particulier, entiteMobile, Vivant, capteur_GPS, Adopte
 	where
@@ -10915,7 +10915,7 @@ select distinct Particulier.nom from Particulier, entiteMobile, Artificiel, Adop
 		entiteMobile.entiteID = Adopte.entiteID and
 		Artificiel.entiteID = entiteMobile.entiteID;
 		
--- 4. Selectionner tous les particuliers qui detiennent que des entit�s mobiles vivantes ( ne d�tiennent pas d'entite artificielle)
+-- 4. Selectionner tous les particuliers qui detiennent que des entites mobiles vivantes ( ne detiennent pas d'entite artificielle)
 select distinct Particulier.nom from Particulier, Vivant, Adopte, Artificiel, entiteMobile
 	where
 		Particulier.particulierID = Adopte.particulierID and
@@ -10923,7 +10923,7 @@ select distinct Particulier.nom from Particulier, Vivant, Adopte, Artificiel, en
 		entiteMobile.entiteID = vivant.entiteID and
 		Particulier.particulierID not in (select Adopte.particulierID from Adopte, Artificiel where Adopte.entiteID != Artificiel.entiteID);
 		
--- 5. Selectionner tous les particuliers qui detiennent que des entit�s mobiles artificiels ( ne d�tiennent pas d'entite vivante)
+-- 5. Selectionner tous les particuliers qui detiennent que des entites mobiles artificiels ( ne detiennent pas d'entite vivante)
 select distinct Particulier.nom from Particulier, Vivant, Adopte, Artificiel, entiteMobile
 	where
 		Particulier.particulierID = Adopte.particulierID and
@@ -10932,7 +10932,7 @@ select distinct Particulier.nom from Particulier, Vivant, Adopte, Artificiel, en
 		Particulier.particulierID not in (select Adopte.particulierID from Adopte, Vivant where Adopte.entiteID != Vivant.entiteID);
 
  -- 6. Selectionner l'entiteID et nom  ainsi que  la position (lat, long) des entites mobiles non artificielles qui sont mortent en 2015 et 
- --qui poss�daient un pourcentage de gras inf�rieur � la moyenne.  
+ --qui possedaient un pourcentage de gras inferieur a la moyenne.  
 
 SELECT entiteID, nom, latitude, longitude FROM DB_GPS, EntiteMobile
   WHERE (DB_GPS.capteurID, sampleDate) IN
@@ -10945,7 +10945,7 @@ SELECT entiteID, nom, latitude, longitude FROM DB_GPS, EntiteMobile
 
 
 
- -- 7. Selectionner tous les particuliers (noms et types)(noms et types) qui ont adopt� un ou des vivants par int�r�t scientifique en mentionnant l'entiteID et espece  des entites mobiles vivantes.  
+ -- 7. Selectionner tous les particuliers (noms et types)(noms et types) qui ont adopte un ou des vivants par interet scientifique en mentionnant l'entiteID et espece  des entites mobiles vivantes.  
 SELECT distinct Particulier.nom, type, Adopte.entiteID, EntiteMobile.nom, Vivant.espece FROM Particulier, Adopte, EntiteMobile, Vivant
   WHERE Adopte.particulierID = Particulier.particulierID 
   AND interet = 'Scientifique'
@@ -10953,7 +10953,7 @@ SELECT distinct Particulier.nom, type, Adopte.entiteID, EntiteMobile.nom, Vivant
   AND EntiteMobile.entiteID = Adopte.entiteID
   ORDER BY type ASC, Particulier.nom ASC;
 
- -- 8. Selectionner tous les particuliers (noms et types) qui ont adopt� des artificiels par int�r�t scientifique en mentionnant l'entiteID et espece  des entites mobiles Artificielles.  
+ -- 8. Selectionner tous les particuliers (noms et types) qui ont adopte des artificiels par interet scientifique en mentionnant l'entiteID et espece  des entites mobiles Artificielles.  
 SELECT distinct Particulier.nom, type, Adopte.entiteID, EntiteMobile.nom, Artificiel.typeMachine FROM Particulier, Adopte, EntiteMobile, Artificiel
   WHERE Adopte.particulierID = Particulier.particulierID 
   AND interet = 'Scientifique'
@@ -10966,7 +10966,7 @@ SELECT distinct nom, type FROM Particulier, Adopte
   WHERE Adopte.particulierID = Particulier.particulierID AND prix = (SELECT MIN(prix) FROM Adopte) 
   ORDER BY type ASC, nom ASC;
 
- -- 10. Selectionner tous les particuliers (noms et types) qui ont adopt� plus de deux entit�s mobiles.
+ -- 10. Selectionner tous les particuliers (noms et types) qui ont adopte plus de deux entites mobiles.
 SELECT nom, type, COUNT(*)  FROM Particulier, Adopte
   WHERE Adopte.particulierID = Particulier.particulierID
   GROUP BY nom, type
