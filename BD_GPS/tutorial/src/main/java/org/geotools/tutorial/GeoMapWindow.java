@@ -48,7 +48,7 @@ public class GeoMapWindow {
 
 		// Create a map content and add our shapefile to it
 		MapContent map = new MapContent();
-		map.setTitle("Quickstart");
+		map.setTitle("View Entite Mobile Trajectory");
 
 		Style style = SLD.createSimpleStyle(featureSource.getSchema());
 		Layer layer = new FeatureLayer(featureSource, style);

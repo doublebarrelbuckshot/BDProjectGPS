@@ -748,7 +748,7 @@ public void  refreshGUIFromEM(){
 				
 				Particulier selectedPA = Particulier.listParticulier.get(selectedPAIndex);  
 				
-				AdoptionScreen as = new AdoptionScreen("Adopt an entity, "+selectedPA.getNom()+".", conn, selectedPA);
+				AdoptionScreen as = new AdoptionScreen("Adopt an entity, "+selectedPA.getNom()+".", conn, selectedPA, this);
 		}
 
 	}

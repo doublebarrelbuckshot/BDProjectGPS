@@ -33,10 +33,11 @@ public class AdoptionScreen extends JFrame implements ListSelectionListener, Act
 	private Particulier leParticulier;
 	private String typeOfInterest = "ludique";
 	private Connection conn;
+	private GUI gui;
 	
-	AdoptionScreen(String title, Connection conn, Particulier particulier){
+	AdoptionScreen(String title, Connection conn, Particulier particulier, GUI gui){
 		super(title);
-		
+		this.gui = gui;
 		this.leParticulier = particulier;
 		this.conn = conn;
 		
@@ -165,7 +166,8 @@ public class AdoptionScreen extends JFrame implements ListSelectionListener, Act
 				e.printStackTrace();
 			}
 			System.out.println("Entity Adopted");
-			
+			gui.refreshGUIFromEM();
+			this.dispose();
 			
 		} else if(action.equals("science")){
 			typeOfInterest = "science";
@@ -193,7 +195,11 @@ public class AdoptionScreen extends JFrame implements ListSelectionListener, Act
 				e.printStackTrace();
 			}
 			System.out.println("Entity UnAdopted");
+			gui.refreshGUIFromEM();
+
 			this.dispose();
+
+
 		} 
 	}
 
