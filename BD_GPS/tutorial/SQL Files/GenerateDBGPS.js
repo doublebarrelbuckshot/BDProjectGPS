@@ -221,12 +221,12 @@ function DPGPS(){
     
                 //Sets latitude and longitude
                 long += Math.random();
-    	        long =  +long.toFixed(6);
+    	        long =  long.toFixed(6);
     	        long %=150;
     	        
     
                 lat += Math.random();
-    	        lat = +lat.toFixed(6);
+    	        lat = lat.toFixed(6);
     	        lat %=80;
     
     	
@@ -296,3 +296,4 @@ function DPGPS(){
     entiteID++;
     }
 }
+DPGPS();
