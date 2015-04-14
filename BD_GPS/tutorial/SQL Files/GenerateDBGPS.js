@@ -1,7 +1,7 @@
 // runs well on http://repl.it/gtl/2
 function DPGPS(){
     entiteID = 100;
-    while(entiteID != 118){
+    while(entiteID <= 118){
         var DD, MM, YY, HH, mmm, SS, lat, long, entiteID;
         
         var isArtifciel = false;
@@ -115,14 +115,14 @@ function DPGPS(){
 	        break;
 	        
 	    case 112:
-	        isVivant = true;
+	        isArtifciel = true;
 	        DD=2;
 	        MM=12;
 	        YY=13;
 	        break;
 	        
 	    case 113:
-	        isVivant = true;
+	        isArtifciel = true;
 	        DD=26;
 	        MM=3;
 	        YY=14;
