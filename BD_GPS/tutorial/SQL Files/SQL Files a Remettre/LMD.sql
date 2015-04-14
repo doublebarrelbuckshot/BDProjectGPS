@@ -10915,21 +10915,21 @@ select distinct Particulier.nom from Particulier, entiteMobile, Artificiel, Adop
 		entiteMobile.entiteID = Adopte.entiteID and
 		Artificiel.entiteID = entiteMobile.entiteID;
 		
--- 4. Selectionner tous les particuliers qui detiennent que des entites mobiles vivantes ( ne detiennent pas d'entite artificielle)
+-- 4. Selectionner tous les particuliers qui  ne détiennent pas d'entite mobile artificiel
 select distinct Particulier.nom from Particulier, Vivant, Adopte, Artificiel, entiteMobile
 	where
 		Particulier.particulierID = Adopte.particulierID and
 		entiteMobile.entiteID = Adopte.entiteID and
 		entiteMobile.entiteID = vivant.entiteID and
-		Particulier.particulierID not in (select Adopte.particulierID from Adopte, Artificiel where Adopte.entiteID != Artificiel.entiteID);
+		Particulier.particulierID not in (select Adopte.particulierID from Adopte, Artificiel where Adopte.entiteID = Artificiel.entiteID);
 		
--- 5. Selectionner tous les particuliers qui detiennent que des entites mobiles artificiels ( ne detiennent pas d'entite vivante)
+-- 5. Selectionner tous les particuliers qui  ne détiennent pas d'entite mobile vivante
 select distinct Particulier.nom from Particulier, Vivant, Adopte, Artificiel, entiteMobile
 	where
 		Particulier.particulierID = Adopte.particulierID and
 		entiteMobile.entiteID = Adopte.entiteID and
 		entiteMobile.entiteID = Artificiel.entiteID and
-		Particulier.particulierID not in (select Adopte.particulierID from Adopte, Vivant where Adopte.entiteID != Vivant.entiteID);
+		Particulier.particulierID not in (select Adopte.particulierID from Adopte, Vivant where Adopte.entiteID = Vivant.entiteID);
 
  -- 6. Selectionner l'entiteID et nom  ainsi que  la position (lat, long) des entites mobiles non artificielles qui sont mortent en 2015 et 
  --qui possedaient un pourcentage de gras inferieur a la moyenne.  
